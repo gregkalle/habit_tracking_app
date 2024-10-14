@@ -16,3 +16,4 @@ class StorageStrategy(ABC):
     def delete(self, habit_id):
         """delete the habit"""
         pass
+    
