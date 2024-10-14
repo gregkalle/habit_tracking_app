@@ -7,7 +7,7 @@ class Analytics:
 
     def __init__(self):
         """
-
+        load all habits
         """
         self.all_habits = Habit.load_all()
     
