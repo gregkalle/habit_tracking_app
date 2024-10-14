@@ -67,7 +67,8 @@ class SQLiteStorage(StorageStrategy):
                 existing_dates = {row[0] for row in cursor.fetchall()}
                     
                 #Insert new completions in the database
-                for date_value in [d for d in self.datetime_to_isoformat(habit.completion.completed_dates) if d not in existing_dates]:
+                for date_value in [d for d in habit.completion.completed_dates
+                                   if d not in existing_dates and isinstance(d, date)]:
                     cursor.execute("""
                         INSERT INTO tracking (habit_id, completed_dates) VALUES (?, ?)
                     """, (habit.habit_id, date_value))
@@ -112,24 +113,7 @@ class SQLiteStorage(StorageStrategy):
                     DELETE FROM habit WHERE id = ?
                 """, (habit_id,))     
             connect.commit()
-    
-        
-    def datetime_to_isoformat(self, completed_dates):
-        """
-        Transform the dates of the list from datetime.date-format into iso-format.
-
-        Returns:
-            [str]: The dates in iso-format
-        """
-        transformed_dates = []
-        for date_value in completed_dates:
-            try:
-               transformed_dates.append(date.isoformat(date_value))
-            except (TypeError, ValueError):
-                continue
-        return transformed_dates
-
-    
+       
     def isoformat_to_datetime(self, completed_dates):
         """
         Transform the dates of the list from iso-format into datetime.date-format.
