@@ -62,4 +62,4 @@ class Completion:
         """
         
         """
-        self.completed_dates = [d for d in self.completed_dates if type(d) == date]
+        self.completed_dates = [d for d in self.completed_dates if isinstance(d,date)]
