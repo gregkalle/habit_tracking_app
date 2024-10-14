@@ -9,7 +9,7 @@ class SQLiteStorage(StorageStrategy):
         Attributes:
 
         DB_NAME = "habits.db"
-        """
+    """
 
     DB_NAME = "habits.db"
     
