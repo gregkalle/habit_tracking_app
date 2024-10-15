@@ -1,6 +1,6 @@
 import sqlite3
 from contextlib import closing
-from storage_strategy import StorageStrategy
+from scr.storage_strategy import StorageStrategy
 from datetime import date
 
 class SQLiteStorage(StorageStrategy):

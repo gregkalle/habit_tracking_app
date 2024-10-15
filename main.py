@@ -1,2 +1,2 @@
-import analytics
-
+from scr.analytics import Analytics
+print("done")

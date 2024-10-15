@@ -1,4 +1,4 @@
-from habit import Habit
+from scr.habit import Habit
 
 class Analytics:
     """

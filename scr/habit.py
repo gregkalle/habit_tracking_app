@@ -1,5 +1,5 @@
-from sqlite_storage import SQLiteStorage
-from completion import Completion
+from scr.sqlite_storage import SQLiteStorage
+from scr.completion import Completion
 
 
 class Habit():
