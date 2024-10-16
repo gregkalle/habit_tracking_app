@@ -8,10 +8,10 @@ class SQLiteStorage(StorageStrategy):
     
         Attributes:
 
-        DB_NAME = "habits.db"
+        DB_NAME = "scr/habits.db"
     """
 
-    DB_NAME = "habits.db"
+    DB_NAME = "scr/habits.db"
     
     
     def __init__(self):
