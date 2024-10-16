@@ -1,17 +1,15 @@
 from scr.analytics import Analytics
 from scr.habit import Habit
 
+#Habit.delete(1)
 
-habit = Habit()
+#habit = Habit()
+habit = Habit.load_all()[0]
+
+habit.completion.mark_completed()
 
 habit.save()
 
-habit1 = Habit.load_all()
+habit1 = Habit.load(habit.habit_id)
 
-print(type(habit))
-
-print(isinstance(habit,type(Habit())))
-
-print(len(habit1))
-
-print(habit1[0].completion.creation_time)
+print(habit1.completion.completed_dates)
