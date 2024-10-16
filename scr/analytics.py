@@ -13,16 +13,24 @@ class Analytics:
     
     @classmethod
     def current_tracked_habit(cls, habit_list, habit_id):
-        pass
+        return [habit for habit in habit_list if habit.habit_id == habit_id][0]
 
     @classmethod
     def habit_with_frequency(cls, habit_list, frequency):
-        pass
+        return [habit for habit in habit_list if habit.completion.frequency == frequency]
 
     @classmethod
-    def get_longest_streaks(cls, habit_list):
-        pass
+    def get_alll_longest_streaks(cls, habit_list):
+        return {habit.habit_id : habit.completion.calculate_longest_streak() for habit in habit_list}
     
     @classmethod
-    def most_struggled_habit(cls, habit_list):
-        pass
+    def get_longest_streak(cls, habit):
+        return habit.completion.calculate_longest_streak()
+    
+    @classmethod
+    def get_all_current_streaks(cls, habit_list):
+        return {habit.habit_id : habit.completion.calculate_streak() for habit in habit_list}
+    
+    @classmethod
+    def get_current_streak(cls, habit):
+        return habit.completion.calculate_streak()
