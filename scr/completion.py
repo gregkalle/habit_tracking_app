@@ -26,12 +26,13 @@ class Completion:
         """the habit is checked today or at a special date"""
         if checked_date is None:
             checked_date = date.today()
-
+            
         # set the checked date to the next periode      
         checked_date = self.creation_time.date() + timedelta(ceil((checked_date - self.creation_time.date()).days/self.frequency) * self.frequency)
-        
+
         if checked_date not in self.completed_dates:
             self.completed_dates.append(checked_date)
+            
 
     def calculate_streak(self):
         """the actual streak count"""

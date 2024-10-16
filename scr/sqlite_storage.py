@@ -69,10 +69,10 @@ class SQLiteStorage(StorageStrategy):
                     
                 #Insert new completions in the database
                 for date_value in [d for d in habit.completion.completed_dates
-                                   if d not in existing_dates and isinstance(d, date)]:
+                                   if d not in self.isoformat_to_datetime(existing_dates) and isinstance(d, date)]:
                     cursor.execute("""
                         INSERT INTO tracking (habit_id, completed_dates) VALUES (?, ?)
-                    """, (habit.habit_id, date_value))
+                    """, (habit.habit_id, date_value.isoformat()))
 
             connect.commit()
 
