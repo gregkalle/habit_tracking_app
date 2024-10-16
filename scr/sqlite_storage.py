@@ -1,7 +1,7 @@
 import sqlite3
 from contextlib import closing
 from scr.storage_strategy import StorageStrategy
-from datetime import date
+from datetime import date, datetime
 
 class SQLiteStorage(StorageStrategy):
     """ SQLiteStorage class.
@@ -29,7 +29,8 @@ class SQLiteStorage(StorageStrategy):
                         id INTEGER PRIMARY KEY,
                         name TEXT NOT NULL,
                         description TEXT NOT NULL,
-                        frequency INT NOT NULL
+                        frequency INT NOT NULL,
+                        creation_time TEXT NOT NULL
                     )
                 """)
                 cursor.execute("""
@@ -56,8 +57,8 @@ class SQLiteStorage(StorageStrategy):
                 else:
                     #Insert new habit data
                     cursor.execute("""
-                        INSERT INTO habit (name, description, frequency) VALUES (?, ?, ?)
-                    """, (habit.name, habit.description, habit.completion.frequency))
+                        INSERT INTO habit (name, description, frequency, creation_time) VALUES (?, ?, ?, ?)
+                    """, (habit.name, habit.description, habit.completion.frequency, habit.completion.creation_time.isoformat()))
                     habit.habit_id = cursor.lastrowid
 
                 #get existing completions
@@ -87,7 +88,7 @@ class SQLiteStorage(StorageStrategy):
             with closing(connect.cursor()) as cursor:
                 #fetch habit data
                 cursor.execute("""
-                    SELECT name, description, frequency FROM habit WHERE id = ?
+                    SELECT name, description, frequency, creation_time FROM habit WHERE id = ?
                 """, (habit_id,))
                 result = cursor.fetchone()
                 if not result:
@@ -97,7 +98,9 @@ class SQLiteStorage(StorageStrategy):
                     SELECT completed_dates FROM tracking WHERE habit_id = ?
                 """, (habit_id,))
                 completed_dates = self.isoformat_to_datetime([row[0] for row in cursor.fetchall()])
-                return {"name" : result[0], "description" : result[1], "frequency" : result[2], "completed_dates" : completed_dates, "habit_id" : habit_id}
+                return {"name" : result[0], "description" : result[1], "frequency" : result[2],
+                        "completed_dates" : completed_dates, "creation_time" : datetime.fromisoformat(result[3]),
+                        "habit_id" : habit_id}
 
 
     def delete(self, habit_id):
