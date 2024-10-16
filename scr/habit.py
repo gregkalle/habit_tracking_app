@@ -9,13 +9,13 @@ class Habit():
     """
     DEFAULT_STORAGE_STRATEGY = SQLiteStorage()
     
-    def __init__(self, name="new habit", description="new description", frequency = Completion.DAILY, completed_dates=[], creation_time = None, habit_id=None):
+    def __init__(self, name, description, frequency = Completion.DAILY, completed_dates=[], creation_time = None, habit_id=None):
         """
         
         """
         self.completion = Completion(frequency, completed_dates, creation_time)
-        self.name = name
-        self.description = description
+        self.name = name or "new habit"
+        self.description = description or "new description"
         self.habit_id = habit_id
 
     def save(self):

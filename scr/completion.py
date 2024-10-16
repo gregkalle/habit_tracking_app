@@ -10,10 +10,12 @@ class Completion:
 
     def __init__(self, frequency = DAILY, completed_dates = [], creation_time = None):
         """Attributs:
-        frequency (DAILY , WEEKLY)
+        frequency (Completion.DAILY , Completion.WEEKLY)
         completed_dates
         """
-        
+        #
+        if not isinstance(frequency, int) and frequency < Completion.DAILY:
+            raise ValueError("Frequency must be a positiv integer")
         self.frequency = frequency
         self.completed_dates = completed_dates
         self.creation_time = creation_time
@@ -26,7 +28,7 @@ class Completion:
         """the habit is checked today or at a special date"""
         if checked_date is None:
             checked_date = date.today()
-            
+
         # set the checked date to the next periode      
         checked_date = self.creation_time.date() + timedelta(ceil((checked_date - self.creation_time.date()).days/self.frequency) * self.frequency)
 

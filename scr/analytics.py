@@ -5,11 +5,21 @@ class Analytics:
     
     """
 
+    MIN_DEFAULT_HABIT = 5
+
     def __init__(self):
         """
         load all habits
         """
         self.all_habits = Habit.load_all()
+
+        # creates the missing amount of habits to the MIN_DEFAULT_HABIT value
+        if len(self.all_habits) < Analytics.MIN_DEFAULT_HABIT:
+            for i in range(Analytics.MIN_DEFAULT_HABIT - len(self.all_habits)):
+                habit = Habit(name = f"Default habit name {i}", description=f"Default habit description {i}")
+                habit.save()
+                self.all_habits.append(habit)
+
     
     @classmethod
     def current_tracked_habit(cls, habit_list, habit_id):

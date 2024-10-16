@@ -1,5 +1,6 @@
 from scr.analytics import Analytics
 from scr.habit import Habit
+from scr.completion import Completion
 
 #Habit.delete(1)
 
@@ -12,4 +13,6 @@ habit.save()
 
 habit1 = Habit.load(habit.habit_id)
 
-print(habit1.completion.completed_dates)
+help(Completion)
+
+
