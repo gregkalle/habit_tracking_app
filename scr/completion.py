@@ -1,4 +1,4 @@
-from datetime import  date, timedelta
+from datetime import  datetime, date, timedelta
 from math import ceil
 
 class Completion:
@@ -8,13 +8,17 @@ class Completion:
     DAILY = 1
     """DAILY is set to 1"""
 
-    def __init__(self, frequency = DAILY, completed_dates = []):
+    def __init__(self, frequency = DAILY, completed_dates = [], creation_time = None):
         """Attributs:
         frequency (DAILY , WEEKLY)
         completed_dates
         """
+        
         self.frequency = frequency
         self.completed_dates = completed_dates
+        self.creation_time = creation_time
+        if not creation_time:
+            self.creation_time = datetime.now() 
         self.set_valid_dates()
         
 
@@ -22,13 +26,10 @@ class Completion:
         """the habit is checked today or at a special date"""
         if checked_date is None:
             checked_date = date.today()
-            
-        if self.completed_dates:
-            try:
-                self.completed_dates.sort()
-                checked_date = self.completed_dates[0] + timedelta(ceil((checked_date - self.completed_dates[0]).days/self.frequency) * self.frequency)
-            except (TypeError, ValueError):
-                return None
+
+        # set the checked date to the next periode      
+        checked_date = self.creation_time.date() + timedelta(ceil((checked_date - self.creation_time.date()).days/self.frequency) * self.frequency)
+        
         if checked_date not in self.completed_dates:
             self.completed_dates.append(checked_date)
 
