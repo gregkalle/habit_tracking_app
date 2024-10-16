@@ -30,7 +30,7 @@ class Habit():
         if not data:
             return None
         
-        return Habit(completion=Completion(frequency=data["frequency"], completed_dates=data["completed_dates"]),
+        return Habit(frequency=data["frequency"], completed_dates=data["completed_dates"],
                      name=data["name"], description=data["description"], habit_id=data["habit_id"])
     
     @classmethod
