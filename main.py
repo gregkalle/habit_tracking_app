@@ -10,5 +10,8 @@ habit1 = Habit.load_all()
 
 print(type(habit))
 
-print(isinstance(habit,type(Habit)))
+print(isinstance(habit,type(Habit())))
 
+print(len(habit1))
+
+print(habit1[0].completion.creation_time)
