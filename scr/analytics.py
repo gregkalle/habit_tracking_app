@@ -6,6 +6,7 @@ class Analytics:
     """
 
     MIN_DEFAULT_HABIT = 5
+    HABIT_LIST_TITLES = ["habit id", "habit name", "description", "frequency", "current streak", "longest streak"]
 
     def __init__(self):
         """
@@ -30,7 +31,7 @@ class Analytics:
         return [habit for habit in habit_list if habit.completion.frequency == frequency]
 
     @classmethod
-    def get_alll_longest_streaks(cls, habit_list):
+    def get_all_longest_streaks(cls, habit_list):
         return {habit.habit_id : habit.completion.calculate_longest_streak() for habit in habit_list}
     
     @classmethod
@@ -44,3 +45,17 @@ class Analytics:
     @classmethod
     def get_current_streak(cls, habit):
         return habit.completion.calculate_streak()
+    
+    @classmethod
+    def habit_to_list(cls, habit):
+        """
+        Returns:
+            [habit id, habit name, description, frequency, current streak, longest streak]
+        """
+        return [habit.habit_id, habit.name, habit.description, habit.frequency, cls.get_current_streak(habit),
+                cls.get_longest_streak(habit)]
+    
+    @classmethod
+    def is_date_completed(cls, habit, date):
+        """"""
+        return date in habit.completion.completed_dates
