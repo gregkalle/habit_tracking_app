@@ -1,4 +1,5 @@
 from scr.analytics import Analytics
+from scr.center_frame import CenterFrame
 import tkinter as tk
 from tkinter import ttk
 
@@ -27,49 +28,26 @@ class App(tk.Tk):
         self.selected_frequency = tk.StringVar()
         self.selected_value = tk.StringVar()
 
-        self.create_top_frame()
-        self.create_bottom_frame()
-
-
+        self.top_frame = self.get_top_frame().pack(side="top")
+        self.get_bottom_frame().pack(side="bottom")
+        self.center_frame = CenterFrame(self, Analytics.HABIT_LIST_TITLES, self.analytics.all_habits)
+        self.center_frame.pack(side="top", fill="both")
 
         self.selected_frequency.trace_add("write",self.frequency_selected)
         self.selected_value.trace_add("write",self.value_selected)
 
+      
 
-    def create_top_frame(self):
+    def get_top_frame(self):
         top_frame = ttk.Frame(self)
-        top_frame.pack(side="top")
-
         title = ttk.Label(top_frame, text="Habit Tracking App")
         title.pack()
-    """
-    def create_center_frame(self):
-        center_frame = ttk.Frame(self)
-        center_frame.pack(side="top", fill="both")
+        return top_frame 
+       
 
-        frames_in_center ={}
-        for name in self.HABIT_LIST_TITLES:
-            frames_in_center[name] = ttk.Frame(master=center_frame, padding=10)
-            frames_in_center[name].pack(side="left", fill="both")
-        
-            label = ttk.Label(frames_in_center[name], text=name)
-            label.pack(side="top", fill="both")
-
-        for get_radio_buttons(frames_in_center[HABIT_LIST_TITLES[0]],[1,2,3,4,5])
-
-    def load_habits(self, habit_list):
-        for habit in habit_list:
-            frames_in_center[name] = ttk.Frame(master=center_frame, padding=10)
-            frames_in_center[name].pack(side="left", fill="both")
-        
-            label = ttk.Label(frames_in_center[name], text=name)
-            label.pack(side="top", fill="both")
-    """
-
-
-    def create_bottom_frame(self):
+    def get_bottom_frame(self):
         bottom_frame = ttk.Frame(self)
-        bottom_frame.pack(side="bottom")
+        
         
         for button in self.BUTTONS.keys():
             self.get_button(bottom_frame,button,self.BUTTONS[button]).pack(side="left")
@@ -77,7 +55,8 @@ class App(tk.Tk):
         self.get_menu_button(bottom_frame,"select periodicity",App.SELECTABLE_FREQUENCIES,
                              self.selected_frequency).pack(side="left")
         self.get_menu_button(bottom_frame,"sort by value",App.SELECTABLE_VALUES,self.selected_value).pack(side="left")
-
+        
+        return bottom_frame
 
     def get_menu_button(self, frame, title, item_selection, selected_item):
 
@@ -104,7 +83,7 @@ class App(tk.Tk):
         print(self.selected_frequency.get())
 
     def value_selected(self, *args):
-        print(self.selected_value.get())
+        self.reload_center_frame(Analytics.HABIT_LIST_TITLES, self.analytics.all_habits)
 
     def click_check_date(self):
         pass
@@ -118,6 +97,10 @@ class App(tk.Tk):
     def click_delete_habit(self):
         pass
 
+    def reload_center_frame(self, column_names, habit_list):
+        self.center_frame.destroy()
+        self.center_frame = CenterFrame(self, column_names, habit_list)
+        self.center_frame.pack(side="top", fill="both")
 
 
 if __name__ == "__main__":
