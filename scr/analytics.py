@@ -23,11 +23,11 @@ class Analytics:
 
     
     @classmethod
-    def current_tracked_habit(cls, habit_list, habit_id):
+    def get_current_tracked_habit(cls, habit_list, habit_id):
         return [habit for habit in habit_list if habit.habit_id == habit_id][0]
 
     @classmethod
-    def habit_with_frequency(cls, habit_list, frequency):
+    def get_habits_with_frequency(cls, habit_list, frequency):
         return [habit for habit in habit_list if habit.completion.frequency == frequency]
 
     @classmethod
@@ -51,8 +51,7 @@ class Analytics:
         """
         Returns:
             {"selected" : habit id, "habit name" : habit name,
-            "description" : description, "frequency" : frequency,
-            "current streak" : current streak, "longest streak" : longest streak, "calender" : "calender"}
+            "description" : description, "frequency" : frequency, "current streak" : current streak, "longest streak" : longest streak, "calender" : "calender"}
         """
         return {cls.HABIT_LIST_TITLES[0] : habit.habit_id, cls.HABIT_LIST_TITLES[1] : habit.name, cls.HABIT_LIST_TITLES[2] : habit.description,
                 cls.HABIT_LIST_TITLES[3] : habit.completion.frequency, cls.HABIT_LIST_TITLES[4] : cls.get_current_streak(habit),

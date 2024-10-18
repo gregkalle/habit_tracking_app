@@ -80,7 +80,14 @@ class App(tk.Tk):
         return [ttk.Radiobutton(frame, value=integer, variable=self.selected_habit_id) for integer in integer_list]
     
     def frequency_selected(self, *args):
-        print(self.selected_frequency.get())
+        frequency_name = self.selected_frequency.get()
+        if frequency_name in App.USABLE_FREQUENCIES.keys():
+            habit_list = Analytics.get_habits_with_frequency(self.analytics.all_habits, App.USABLE_FREQUENCIES[frequency_name])
+        else:
+            habit_list = self.analytics.all_habits
+
+        self.reload_center_frame(Analytics.HABIT_LIST_TITLES,habit_list)
+            
 
     def value_selected(self, *args):
         self.reload_center_frame(Analytics.HABIT_LIST_TITLES, self.analytics.all_habits)
