@@ -17,12 +17,6 @@ class CenterFrame(ttk.Frame):
         self.pack_all_habits(self.habit_list)
         self.columnconfigure(0, minsize=10)
 
-        
-        #self.children_frames = self.get_children_frames(self.column_names)
-        #self.pack_all_habits(self.children_frames, self.habit_list)
-        #self.pack_children_frames(self.children_frames)
-       
-        #self.pack_radio_buttons(self.get_radio_buttons(self.children_frames[self.column_names[0]], Analytics.get_habit_ids(self.habit_list)))
 
     def set_column_names(self, column_names):
         "set the columnames of the data table"
@@ -30,14 +24,15 @@ class CenterFrame(ttk.Frame):
             ttk.Label(self,text=name,anchor=tk.CENTER).grid(column=column_names.index(name)+CenterFrame.COLUMN_OFFSET, row=0,ipadx=10, ipady=20)
     
     def pack_all_habits(self, habit_list):
-        """packing the data of all habits in the child frames of the center frame"""
+        """packing the data of all habits in the data table of the center frame"""
         row = 1
         for habit in habit_list:
             habit_data = Analytics.habit_to_dict(habit)
             self.pack_habit_data(habit_data, row)
             row += 1
 
-    def pack_habit_data(self, habit_data, row): 
+    def pack_habit_data(self, habit_data, row):
+        """packing the data of a habit in the data table of the center frame"""
         for name in habit_data.keys():
             if name == self.column_names[0]:
                 ttk.Radiobutton(self,value=habit_data[name],variable=self.selected_habit_id).grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,row=row,ipadx=10)

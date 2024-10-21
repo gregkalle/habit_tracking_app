@@ -1,5 +1,6 @@
 from scr.analytics import Analytics
 from scr.center_frame import CenterFrame
+from scr.bottom_frame import BottomFrame
 import tkinter as tk
 from tkinter import ttk
 
@@ -15,26 +16,16 @@ class App(tk.Tk):
 
         self.analytics = Analytics()
 
-        self.BUTTONS = {"check date" : self.click_check_date,
-                        "new habit" : self.click_new_habit,
-                        "change habit" : self.click_change_habit,
-                        "delete habit" : self.click_delete_habit
-                        }
-
         self.geometry("800x400")
         self.title("Habit Tracking App")
 
-        self.selected_habit_id = tk.IntVar()
-        self.selected_frequency = tk.StringVar()
-        self.selected_value = tk.StringVar()
-
         self.top_frame = self.get_top_frame().pack(side="top")
-        self.get_bottom_frame().pack(side="bottom")
+        self.bottom_frame = BottomFrame(self)
+        self.bottom_frame.pack(side="bottom")
         self.center_frame = CenterFrame(self, Analytics.HABIT_LIST_TITLES, self.analytics.all_habits)
         self.center_frame.pack(side="top", fill="both")
 
-        self.selected_frequency.trace_add("write",self.frequency_selected)
-        self.selected_value.trace_add("write",self.value_selected)
+
 
       
 
@@ -52,8 +43,8 @@ class App(tk.Tk):
         for button in self.BUTTONS.keys():
             self.get_button(bottom_frame,button,self.BUTTONS[button]).pack(side="left")
         
-        self.get_menu_button(bottom_frame,"select periodicity",App.SELECTABLE_FREQUENCIES,
-                             self.selected_frequency).pack(side="left")
+        self.get_menu_button(frame=bottom_frame,title="select periodicity",item_selection=App.SELECTABLE_FREQUENCIES,
+                             selected_item=self.selected_frequency).pack(side="left")
         self.get_menu_button(bottom_frame,"sort by value",App.SELECTABLE_VALUES,self.selected_value).pack(side="left")
         
         return bottom_frame

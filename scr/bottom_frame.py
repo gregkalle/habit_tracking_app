@@ -17,13 +17,16 @@ class BottomFrame(ttk.Frame):
         self.selected_frequency = tk.StringVar()
         self.selected_value = tk.StringVar()
 
-        for button in master.BUTTONS.keys():
+        for button in self.BUTTONS.keys():
             self.get_button(frame=self,text=button,function=self.BUTTONS[button]).pack(side="left")
         
         self.get_menu_button(frame=self,title="select periodicity",item_selection=master.SELECTABLE_FREQUENCIES,
                              selected_item=self.selected_frequency).pack(side="left")
         self.get_menu_button(frame=self,title="sort by value",item_selection=master.SELECTABLE_VALUES
                              ,selected_item=self.selected_value).pack(side="left")
+        
+        self.selected_frequency.trace_add("write",self.frequency_selected)
+        self.selected_value.trace_add("write",self.value_selected)
 
     def get_menu_button(self, frame, title, item_selection, selected_item):
         """
@@ -57,3 +60,17 @@ class BottomFrame(ttk.Frame):
 
     def click_delete_habit(self):
         pass
+
+    def frequency_selected(self, *args):
+        """Execute the reload_center_frame methode in the master frame with the habits of the right frequency"""
+        frequency_name = self.selected_frequency.get()
+        if frequency_name in self.master.USABLE_FREQUENCIES.keys():
+            habit_list = Analytics.get_habits_with_frequency(self.master.analytics.all_habits, self.master.USABLE_FREQUENCIES[frequency_name])
+        else:
+            habit_list = self.master.analytics.all_habits
+
+        self.master.reload_center_frame(Analytics.HABIT_LIST_TITLES,habit_list)
+            
+
+    def value_selected(self, *args):
+        self.master.reload_center_frame(Analytics.HABIT_LIST_TITLES, self.master.analytics.all_habits)
