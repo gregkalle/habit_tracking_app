@@ -30,7 +30,7 @@ class DatePicker(PopUpWindow):
         self.calender = Calendar(master=self.calender_frame, selectmode="day")
         self.calender.pack()
         self.calender_frame.pack()
-        #self.pack_buttons()
+        self.pack_buttons()
 
 
 

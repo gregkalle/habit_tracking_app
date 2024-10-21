@@ -14,6 +14,7 @@ class EntryPopUp(PopUpWindow):
         super().__init__(master=master)
         
         self.behave = behave
+        self.title(self.behave)
 
         self.habit_frequency = tk.IntVar(self)
 
