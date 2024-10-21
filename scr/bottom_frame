@@ -1,0 +1,59 @@
+from scr.analytics import Analytics
+import tkinter as tk
+from tkinter import ttk
+
+
+class BottomFrame(ttk.Frame):
+
+    def __init__(self, master):
+        super().__init__(master)
+
+        self.BUTTONS = {"check date" : self.click_check_date,
+                        "new habit" : self.click_new_habit,
+                        "change habit" : self.click_change_habit,
+                        "delete habit" : self.click_delete_habit
+                        }
+
+        self.selected_frequency = tk.StringVar()
+        self.selected_value = tk.StringVar()
+
+        for button in master.BUTTONS.keys():
+            self.get_button(frame=self,text=button,function=self.BUTTONS[button]).pack(side="left")
+        
+        self.get_menu_button(frame=self,title="select periodicity",item_selection=master.SELECTABLE_FREQUENCIES,
+                             selected_item=self.selected_frequency).pack(side="left")
+        self.get_menu_button(frame=self,title="sort by value",item_selection=master.SELECTABLE_VALUES
+                             ,selected_item=self.selected_value).pack(side="left")
+
+    def get_menu_button(self, frame, title, item_selection, selected_item):
+        """
+        get a menu button 
+        """
+
+        menu_button = ttk.Menubutton(frame, text=title)
+        menu = tk.Menu(menu_button)
+
+        for item in item_selection:
+            menu.add_radiobutton(
+                label=item,
+                value=item.upper(),
+                variable=selected_item
+            )
+        menu_button["menu"] = menu
+        return menu_button
+    
+    def get_button(self, frame, text, function):
+        """get a button"""
+        return ttk.Button(frame, text=text, command=function, padding=10)
+    
+    def click_check_date(self):
+        pass
+
+    def click_new_habit(self):
+        pass
+
+    def click_change_habit(self):
+        pass
+
+    def click_delete_habit(self):
+        pass
