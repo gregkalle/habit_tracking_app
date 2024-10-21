@@ -10,8 +10,8 @@ class EntryPopUp(PopUpWindow):
     BEHAVE_CHANGE_HABIT = "change habit"
 
     
-    def __init__(self, master, behave = BEHAVE_NEW_HABIT):
-        super().__init__(master=master)
+    def __init__(self, main_window, behave = BEHAVE_NEW_HABIT):
+        super().__init__(main_window=main_window)
         
         self.behave = behave
         self.title(self.behave)

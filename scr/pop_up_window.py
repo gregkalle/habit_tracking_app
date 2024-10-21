@@ -1,19 +1,20 @@
-from tkinter import Tk
+from tkinter import Tk, StringVar
 from tkinter.ttk import Frame, Button
 from tkcalendar import Calendar
+from datetime import date
 
 class PopUpWindow(Tk):
 
-    def __init__(self, master):
+    def __init__(self, main_window):
         super().__init__()
 
-        self.master = master
-        self.master.add_child_window(self)
+        self.main_window = main_window
+        self.main_window.add_child_window(self)
 
 
     def destroy(self):
         try:
-            self.master.remove.child_window()
+            self.main_window.remove.child_window()
         except:
             pass
         return super().destroy()
@@ -22,14 +23,12 @@ class PopUpWindow(Tk):
 
 class DatePicker(PopUpWindow):
 
-    def __init__(self, master):
-        super().__init__(master=master)
+    def __init__(self, main_window):
+        super().__init__(main_window=main_window)
 
         self.title("select date")
-        self.calender_frame = Frame(self)
-        self.calender = Calendar(master=self.calender_frame, selectmode="day")
+        self.calender = Calendar(master=self, selectmode="day")
         self.calender.pack()
-        self.calender_frame.pack()
         self.pack_buttons()
 
 

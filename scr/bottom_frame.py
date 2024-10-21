@@ -3,6 +3,7 @@ from scr.pop_up_window import DatePicker
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as mb
+from tkcalendar import Calendar
 from scr.entry_window import EntryPopUp
 
 
@@ -60,10 +61,10 @@ class BottomFrame(ttk.Frame):
                        )
             message.show()
         else:
-            calender = DatePicker(self.master)
+            DatePicker(main_window=self.master)
 
     def click_new_habit(self):
-        pop_up_window = EntryPopUp(master=self.master)
+        pop_up_window = EntryPopUp(main_window=self.master)    
 
     def click_change_habit(self):
         if not self.master.center_frame.selected_habit_id.get():
@@ -72,7 +73,7 @@ class BottomFrame(ttk.Frame):
                                )
             message.show()
         else:
-            pop_up_window = EntryPopUp(master=self.master, behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
+            pop_up_window = EntryPopUp(main_window=self.master, behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
 
     def click_delete_habit(self):
         """delet the selected habit"""
