@@ -90,3 +90,9 @@ class Analytics:
     @classmethod
     def delete_habit(cls, habit_id):
         Habit.delete(habit_id=habit_id)
+
+    @classmethod
+    def mark_completed(cls, habit_id, date=None):
+        habit = Habit.load(habit_id=habit_id)
+        habit.completion.mark_completed(checked_date=date)
+        habit.save()

@@ -37,8 +37,8 @@ class EntryPopUp(PopUpWindow):
     def pack_frequency_entry_field(self, label_text, variable):
         frame = ttk.Frame(self)
         ttk.Label(frame,anchor="w", text=label_text,padding=10).pack(side="left")
-        for text in self.master.USABLE_FREQUENCIES:
-            ttk.Radiobutton(frame,text=text.lower(),value=self.master.USABLE_FREQUENCIES[text],
+        for text in self.main_window.USABLE_FREQUENCIES:
+            ttk.Radiobutton(frame,text=text.lower(),value=self.main_window.USABLE_FREQUENCIES[text],
                             variable=variable).pack(side="left")
         frame.pack()
     
@@ -67,14 +67,14 @@ class EntryPopUp(PopUpWindow):
                                        habit_description=self.entry_habit_description.get(),
                                        frequency=self.habit_frequency.get())
             try:
-                self.master.analytics.all_habits.append(habit)
+                self.main_window.analytics.all_habits.append(habit)
             except AttributeError:
                 pass
             except:
                 pass
             
             try:
-                self.master.reload_center_frame(self.master.analytics.all_habits)
+                self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
             except AttributeError:
                 pass
             except:
@@ -89,10 +89,10 @@ class EntryPopUp(PopUpWindow):
                        )
             message.show()
         else:
-                Analytics.change_habit_name_description(habit_id=self.master.center_frame.selected_habit_id.get(),
+                Analytics.change_habit_name_description(habit_id=self.main_window.center_frame.selected_habit_id.get(),
                                                         habit_name=self.entry_habit_name.get(),
                                                         habit_description=self.entry_habit_description.get())
-                self.master.analytics.load_habits()
-                self.master.reload_center_frame(self.master.analytics.all_habits)
+                self.main_window.analytics.load_habits()
+                self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         self.destroy()
         

@@ -1,7 +1,7 @@
-from tkinter import Tk, StringVar
+from scr.analytics import Analytics
+from tkinter import Tk
 from tkinter.ttk import Frame, Button
 from tkcalendar import Calendar
-from datetime import date
 
 class PopUpWindow(Tk):
 
@@ -42,7 +42,10 @@ class DatePicker(PopUpWindow):
         button_frame.pack(side="bottom")
 
     def click_today(self):
-        pass
+        Analytics.mark_completed(habit_id=self.main_window.center_frame.selected_habit_id.get())
+        self.main_window.analytics.load_habits()
+        self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
+        self.destroy()
 
     def click_date(self):
         pass

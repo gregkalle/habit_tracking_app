@@ -102,4 +102,4 @@ class BottomFrame(ttk.Frame):
         self.master.reload_center_frame(habit_list)
             
     def value_selected(self, *args):
-        self.master.reload_center_frame(Analytics.HABIT_LIST_TITLES, self.master.analytics.all_habits)
+        self.master.reload_center_frame(self.master.analytics.all_habits)
