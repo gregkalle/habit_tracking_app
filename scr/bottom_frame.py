@@ -1,9 +1,8 @@
 from scr.analytics import Analytics
-from datetime import date
+from scr.pop_up_window import DatePicker
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as mb
-import tkcalendar
 from scr.entry_window import EntryPopUp
 
 
@@ -55,10 +54,16 @@ class BottomFrame(ttk.Frame):
         return ttk.Button(frame, text=text, command=function, padding=10)
     
     def click_check_date(self):
-        calender = TimePicker()
+        if not self.master.center_frame.selected_habit_id.get():
+            message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
+                       message="No habit selected"
+                       )
+            message.show()
+        else:
+            calender = DatePicker(self.master)
 
     def click_new_habit(self):
-        pop_up_window = EntryPopUp(master=self.master, behave=EntryPopUp.BEHAVE_NEW_HABIT)
+        pop_up_window = EntryPopUp(master=self.master)
 
     def click_change_habit(self):
         if not self.master.center_frame.selected_habit_id.get():
@@ -97,17 +102,3 @@ class BottomFrame(ttk.Frame):
             
     def value_selected(self, *args):
         self.master.reload_center_frame(Analytics.HABIT_LIST_TITLES, self.master.analytics.all_habits)
-
-
-class TimePicker(tk.Tk):
-
-    def __init__(self):
-        super().__init__()
-
-        calender = tkcalendar.Calendar(self, selectmode="day")
-        calender.pack()
-        
-
-
-
-    

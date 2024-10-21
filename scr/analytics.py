@@ -12,6 +12,12 @@ class Analytics:
     def __init__(self):
         
         self.load_habits()
+                # creates the missing amount of habits to the MIN_DEFAULT_HABIT value
+        if len(self.all_habits) < Analytics.MIN_DEFAULT_HABIT:
+            for i in range(Analytics.MIN_DEFAULT_HABIT - len(self.all_habits)):
+                habit = Habit(name = f"Default habit name {i}", description=f"Default habit description {i}")
+                habit.save()
+                self.all_habits.append(habit)
 
     def load_habits(self):
         """
@@ -19,14 +25,7 @@ class Analytics:
         """
         self.all_habits = Habit.load_all()
 
-        # creates the missing amount of habits to the MIN_DEFAULT_HABIT value
-        if len(self.all_habits) < Analytics.MIN_DEFAULT_HABIT:
-            for i in range(Analytics.MIN_DEFAULT_HABIT - len(self.all_habits)):
-                habit = Habit(name = f"Default habit name {i}", description=f"Default habit description {i}")
-                habit.save()
-                self.all_habits.append(habit)
-
-    
+   
     @classmethod
     def get_current_tracked_habit(cls, habit_list, habit_id):
         return [habit for habit in habit_list if habit.habit_id == habit_id][0]
@@ -78,19 +77,14 @@ class Analytics:
         return habit
     
     @classmethod
-    def change_habit_name(cls, habit_id, habit_name):
+    def change_habit_name_description(cls, habit_id, habit_name=None, habit_description=None):
         """change the habit_name of given habit
         """
         habit = Habit.load(habit_id=habit_id)
-        habit.name = habit_name
-        habit.save()
-
-    @classmethod
-    def change_habit_description(cls, habit_description, habit_id):
-        """change the habit_description of given habit
-        """
-        habit = Habit.load(habit_id=habit_id)
-        habit.description = habit_description
+        if habit_name:
+            habit.name = habit_name
+        if habit_description:    
+            habit.description = habit_description
         habit.save()
 
     @classmethod

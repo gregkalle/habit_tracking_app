@@ -88,16 +88,10 @@ class EntryPopUp(PopUpWindow):
                        )
             message.show()
         else:
-                if self.entry_habit_name.get():
-                    Analytics.change_habit_name(habit_id=self.master.center_frame.selected_habit_id.get(),
-                                                habit_name=self.entry_habit_name.get())
-                    self.master.analytics.load_habits()
-                    self.master.reload_center_frame(self.master.analytics.all_habits)
-
-                if self.entry_habit_description.get():
-                    Analytics.change_habit_description(habit_id=self.master.center_frame.selected_habit_id.get(),
-                                                habit_description=self.entry_habit_description.get())
-                    self.master.analytics.load_habits()
-                    self.master.reload_center_frame(self.master.analytics.all_habits)
-                self.destroy()
+                Analytics.change_habit_name_description(habit_id=self.master.center_frame.selected_habit_id.get(),
+                                                        habit_name=self.entry_habit_name.get(),
+                                                        habit_description=self.entry_habit_description.get())
+                self.master.analytics.load_habits()
+                self.master.reload_center_frame(self.master.analytics.all_habits)
+        self.destroy()
         
