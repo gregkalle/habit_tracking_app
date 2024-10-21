@@ -7,7 +7,7 @@ from tkinter import ttk
 class App(tk.Tk):
     """
     """
-    USABLE_FREQUENCIES = {"WEEKLY" : 7, "DAILY" : 1}
+    USABLE_FREQUENCIES = {"DAILY" : 1, "WEEKLY" : 7}
     SELECTABLE_VALUES = ("frequency", "current streak", "longest streak")
     SELECTABLE_FREQUENCIES = ("Daily", "Weekly", "All")
 
@@ -15,6 +15,7 @@ class App(tk.Tk):
         super().__init__()
 
         self.analytics = Analytics()
+        self.child_windows = []
 
         self.geometry("800x400")
         self.title("Habit Tracking App")
@@ -26,8 +27,19 @@ class App(tk.Tk):
         self.center_frame.pack(side="top", fill="both")
 
 
+    def destroy(self):
+        try:
+            for child in self.child_windows:
+                child.destroy()
+        except:
+            pass
+        return super().destroy()
 
-      
+    def add_child_window(self, child):
+        self.child_windows.append(child)
+
+    def remove_child_window(self,child):
+        self.child_windows.remove(child)
 
     def get_top_frame(self):
         top_frame = ttk.Frame(self)
@@ -35,9 +47,9 @@ class App(tk.Tk):
         title.pack()
         return top_frame 
     
-    def reload_center_frame(self, column_names, habit_list):
+    def reload_center_frame(self, habit_list):
         self.center_frame.destroy()
-        self.center_frame = CenterFrame(self, column_names, habit_list)
+        self.center_frame = CenterFrame(self, Analytics.HABIT_LIST_TITLES, habit_list)
         self.center_frame.pack(side="top", fill="both")
 
 

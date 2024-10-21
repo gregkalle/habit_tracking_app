@@ -54,6 +54,7 @@ class SQLiteStorage(StorageStrategy):
                         UPDATE habit SET name = ?, description = ? WHERE id = ?
                     """,(habit.name, habit.description, habit.habit_id))
 
+
                 else:
                     #Insert new habit data
                     cursor.execute("""

@@ -10,6 +10,10 @@ class Analytics:
 
 
     def __init__(self):
+        
+        self.load_habits()
+
+    def load_habits(self):
         """
         load all habits
         """
@@ -66,3 +70,29 @@ class Analytics:
     @classmethod
     def get_habit_ids(cls, habit_list):
         return [habit.habit_id for habit in habit_list]
+    
+    @classmethod
+    def create_new_habit(cls, habit_name, habit_description, frequency):
+        habit = Habit(name=habit_name,description=habit_description,frequency=frequency)
+        habit.save()
+        return habit
+    
+    @classmethod
+    def change_habit_name(cls, habit_id, habit_name):
+        """change the habit_name of given habit
+        """
+        habit = Habit.load(habit_id=habit_id)
+        habit.name = habit_name
+        habit.save()
+
+    @classmethod
+    def change_habit_description(cls, habit_description, habit_id):
+        """change the habit_description of given habit
+        """
+        habit = Habit.load(habit_id=habit_id)
+        habit.description = habit_description
+        habit.save()
+
+    @classmethod
+    def delete_habit(cls, habit_id):
+        Habit.delete(habit_id=habit_id)

@@ -11,7 +11,7 @@ class CenterFrame(ttk.Frame):
 
         self.column_names = column_names
         self.habit_list = habit_list
-        self.selected_habit_id = tk.IntVar()
+        self.selected_habit_id = tk.IntVar(self)
 
         self.set_column_names(self.column_names)
         self.pack_all_habits(self.habit_list)

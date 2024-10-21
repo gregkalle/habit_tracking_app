@@ -1,6 +1,8 @@
 from scr.analytics import Analytics
 import tkinter as tk
 from tkinter import ttk
+import tkinter.messagebox as mb
+from scr.pop_up_window import PopUpWindow
 
 
 class BottomFrame(ttk.Frame):
@@ -53,13 +55,26 @@ class BottomFrame(ttk.Frame):
         pass
 
     def click_new_habit(self):
-        pass
+        pop_up_window = PopUpWindow(main_window=self.master, behave=PopUpWindow.BEHAVE_NEW_HABIT)
 
     def click_change_habit(self):
-        pass
+        pop_up_window = PopUpWindow(main_window=self.master, behave=PopUpWindow.BEHAVE_CHANGE_HABIT)
 
     def click_delete_habit(self):
-        pass
+        """delet the selected habit"""
+        if not self.master.center_frame.selected_habit_id.get():
+            message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
+                       message="No habit selected"
+                       )
+            message.show()
+        else:    
+            message = mb.askokcancel(title="Delete",
+                                     message=f"Do you want to delete the selected habit with the id {self.master.center_frame.selected_habit_id.get()}?"                                     
+                                     )
+            if message:
+                Analytics.delete_habit(habit_id=self.master.center_frame.selected_habit_id.get())
+                self.master.analytics.load_habits()
+                self.master.reload_center_frame(self.master.analytics.all_habits)
 
     def frequency_selected(self, *args):
         """Execute the reload_center_frame methode in the master frame with the habits of the right frequency"""
@@ -69,7 +84,7 @@ class BottomFrame(ttk.Frame):
         else:
             habit_list = self.master.analytics.all_habits
 
-        self.master.reload_center_frame(Analytics.HABIT_LIST_TITLES,habit_list)
+        self.master.reload_center_frame(habit_list)
             
 
     def value_selected(self, *args):
