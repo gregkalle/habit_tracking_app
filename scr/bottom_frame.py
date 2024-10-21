@@ -1,8 +1,11 @@
 from scr.analytics import Analytics
+from datetime import date
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as mb
-from scr.pop_up_window import PopUpWindow
+import tkcalendar
+from scr.entry_window import EntryPopUp
+
 
 
 class BottomFrame(ttk.Frame):
@@ -52,13 +55,19 @@ class BottomFrame(ttk.Frame):
         return ttk.Button(frame, text=text, command=function, padding=10)
     
     def click_check_date(self):
-        pass
+        calender = TimePicker()
 
     def click_new_habit(self):
-        pop_up_window = PopUpWindow(main_window=self.master, behave=PopUpWindow.BEHAVE_NEW_HABIT)
+        pop_up_window = EntryPopUp(master=self.master, behave=EntryPopUp.BEHAVE_NEW_HABIT)
 
     def click_change_habit(self):
-        pop_up_window = PopUpWindow(main_window=self.master, behave=PopUpWindow.BEHAVE_CHANGE_HABIT)
+        if not self.master.center_frame.selected_habit_id.get():
+            message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
+                                message="No habit selected"
+                               )
+            message.show()
+        else:
+            pop_up_window = EntryPopUp(master=self.master, behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
 
     def click_delete_habit(self):
         """delet the selected habit"""
@@ -86,6 +95,19 @@ class BottomFrame(ttk.Frame):
 
         self.master.reload_center_frame(habit_list)
             
-
     def value_selected(self, *args):
         self.master.reload_center_frame(Analytics.HABIT_LIST_TITLES, self.master.analytics.all_habits)
+
+
+class TimePicker(tk.Tk):
+
+    def __init__(self):
+        super().__init__()
+
+        calender = tkcalendar.Calendar(self, selectmode="day")
+        calender.pack()
+        
+
+
+
+    
