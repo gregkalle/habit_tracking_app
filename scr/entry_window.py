@@ -66,6 +66,7 @@ class EntryPopUp(PopUpWindow):
             habit = Analytics.create_new_habit(habit_name=self.entry_habit_name.get(),
                                        habit_description=self.entry_habit_description.get(),
                                        frequency=self.habit_frequency.get())
+            habit.save()
             try:
                 self.main_window.analytics.all_habits.append(habit)
             except AttributeError:
@@ -89,9 +90,10 @@ class EntryPopUp(PopUpWindow):
                        )
             message.show()
         else:
-                Analytics.change_habit_name_description(habit_id=self.main_window.center_frame.selected_habit_id.get(),
+                habit = Analytics.change_habit_name_description(habit_id=self.main_window.center_frame.selected_habit_id.get(),
                                                         habit_name=self.entry_habit_name.get(),
                                                         habit_description=self.entry_habit_description.get())
+                habit.save()
                 self.main_window.analytics.load_habits()
                 self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         self.destroy()

@@ -73,26 +73,25 @@ class Analytics:
     @classmethod
     def create_new_habit(cls, habit_name, habit_description, frequency):
         habit = Habit(name=habit_name,description=habit_description,frequency=frequency)
-        habit.save()
         return habit
     
     @classmethod
     def change_habit_name_description(cls, habit_id, habit_name=None, habit_description=None):
-        """change the habit_name of given habit
+        """change the habit_name and habit_description of given habit
         """
         habit = Habit.load(habit_id=habit_id)
         if habit_name:
             habit.name = habit_name
         if habit_description:    
             habit.description = habit_description
-        habit.save()
+        return habit
 
     @classmethod
     def delete_habit(cls, habit_id):
         Habit.delete(habit_id=habit_id)
 
     @classmethod
-    def mark_completed(cls, habit_id, date=None):
+    def get_marked_completed(cls, habit_id, date=None):
         habit = Habit.load(habit_id=habit_id)
         habit.completion.mark_completed(checked_date=date)
-        habit.save()
+        return habit

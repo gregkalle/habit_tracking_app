@@ -52,7 +52,8 @@ class DatePicker(PopUpWindow):
         date_str = self.calender.get_date()
         month, day, year = [int(date_) for date_ in date_str.split("/")]
         year = 2000 + year
-        Analytics.mark_completed(habit_id=self.main_window.center_frame.selected_habit_id.get(),date=date(year=year,month=month,day=day))
+        habit = Analytics.get_marked_completed(habit_id=self.main_window.center_frame.selected_habit_id.get(),date=date(year=year,month=month,day=day))
+        habit.save()
         self.main_window.analytics.load_habits()
         self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         self.destroy()
