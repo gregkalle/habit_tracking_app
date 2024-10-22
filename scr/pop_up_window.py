@@ -74,7 +74,8 @@ class DatePicker(PopUpWindow):
         """
         Mark the habit as completed for today and update the main window.
         """
-        Analytics.mark_completed(habit_id=self.main_window.center_frame.selected_habit_id.get())
+        habit = Analytics.get_marked_completed(habit_id=self.main_window.center_frame.selected_habit_id.get())
+        habit.save()
         self.main_window.analytics.load_habits()
         self.main_window.reload_center_frame(self.main_window.analytics.all_habits)        
         self.destroy()

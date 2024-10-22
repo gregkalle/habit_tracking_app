@@ -30,6 +30,7 @@ class Completion:
         if checked_date is None:
             checked_date = date.today()
 
+        self.validate_date(checked_date)
         # set the checked date to the next periode      
         checked_date = self.creation_time.date() + timedelta(ceil((checked_date - self.creation_time.date()).days/self.frequency) * self.frequency)
 
@@ -40,6 +41,7 @@ class Completion:
     def calculate_streak(self):
         """the actual streak count"""
         today = date.today()
+        today = self.creation_time.date() + timedelta(ceil((today - self.creation_time.date()).days/self.frequency) * self.frequency)
         streak = 0
         while today in self.completed_dates:
             streak += 1
@@ -48,7 +50,6 @@ class Completion:
             
     def calculate_longest_streak(self):
         """calculate the longest streak"""
-        self.set_valid_dates()
         if not self.completed_dates:
             return 0
             
