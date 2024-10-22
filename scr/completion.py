@@ -21,7 +21,8 @@ class Completion:
         self.creation_time = creation_time
         if not creation_time:
             self.creation_time = datetime.now() 
-        self.set_valid_dates()
+        for date_ in self.completed_dates:
+            self.validate_date(date_)
         
 
     def mark_completed(self, checked_date=None):
@@ -62,8 +63,9 @@ class Completion:
             longest_streak = max(streak, longest_streak)
         return longest_streak
 
-    def set_valid_dates(self):
+    def validate_date(self, completed_date):
         """
-        
+        Check the type of the completed_date and raise a TypeError if not of type datetime.date.
         """
-        self.completed_dates = [d for d in self.completed_dates if isinstance(d,date)]
+        if not isinstance(completed_date,date):
+            raise TypeError("The elements of completed_dates must be of type datetime.date")
