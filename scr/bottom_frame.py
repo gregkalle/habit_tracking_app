@@ -16,7 +16,8 @@ class BottomFrame(ttk.Frame):
         self.BUTTONS = {"check date" : self.click_check_date,
                         "new habit" : self.click_new_habit,
                         "change habit" : self.click_change_habit,
-                        "delete habit" : self.click_delete_habit
+                        "delete habit" : self.click_delete_habit,
+                        "calendar" : self.click_calendar
                         }
 
         self.selected_frequency = tk.StringVar()
@@ -95,6 +96,9 @@ class BottomFrame(ttk.Frame):
                 Analytics.delete_habit(habit_id=self.master.center_frame.selected_habit_id.get())
                 self.master.analytics.load_habits()
                 self.master.reload_center_frame(self.master.analytics.all_habits)
+            
+    def click_calendar(self):
+        pass
 
     def frequency_selected(self, *args):
         """Execute the reload_center_frame methode in the master frame with the habits of the right frequency"""

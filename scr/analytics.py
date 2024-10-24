@@ -6,7 +6,7 @@ class Analytics:
     """
 
     MIN_DEFAULT_HABIT = 5
-    HABIT_LIST_TITLES = ["selected", "habit name", "description", "frequency", "current streak", "longest streak", "calendar"]
+    HABIT_LIST_TITLES = ["selected", "habit name", "description", "frequency", "current streak", "longest streak"]
 
 
     def __init__(self):
@@ -55,11 +55,11 @@ class Analytics:
         """
         Returns:
             {"selected" : habit id, "habit name" : habit name,
-            "description" : description, "frequency" : frequency, "current streak" : current streak, "longest streak" : longest streak, "calender" : "calender"}
+            "description" : description, "frequency" : frequency, "current streak" : current streak, "longest streak" : longest streak}
         """
         return {cls.HABIT_LIST_TITLES[0] : habit.habit_id, cls.HABIT_LIST_TITLES[1] : habit.name, cls.HABIT_LIST_TITLES[2] : habit.description,
                 cls.HABIT_LIST_TITLES[3] : habit.completion.frequency, cls.HABIT_LIST_TITLES[4] : cls.get_current_streak(habit),
-                cls.HABIT_LIST_TITLES[5] : cls.get_longest_streak(habit), cls.HABIT_LIST_TITLES[6] : "calender"}
+                cls.HABIT_LIST_TITLES[5] : cls.get_longest_streak(habit)}
     
     @classmethod
     def is_date_completed(cls, habit, date):
