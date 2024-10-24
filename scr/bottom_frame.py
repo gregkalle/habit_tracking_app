@@ -103,7 +103,7 @@ class BottomFrame(ttk.Frame):
         else:
             habit_list = self.master.analytics.all_habits
         self.master.reload_center_frame(habit_list)
-        #return args to prevent
+        #return args to prevent unused argument Pylint warning
         return args
 
     def show_no_habit_selected(self):
