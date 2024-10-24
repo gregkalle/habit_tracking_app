@@ -6,8 +6,8 @@ from scr.pop_up_window import DatePicker
 from scr.entry_window import EntryPopUp
 
 
-
 class BottomFrame(ttk.Frame):
+
 
 
     def __init__(self, master):
@@ -92,7 +92,8 @@ class BottomFrame(ttk.Frame):
         if not self.master.center_frame.selected_habit_id.get():
             self.show_no_habit_selected()
 
-    def frequency_selected(self, *args):
+
+    def frequency_selected(self,*args):
         """Execute the reload_center_frame methode in the master\
             frame with the habits of the right frequency"""
         frequency_name = self.selected_frequency.get()
@@ -101,8 +102,9 @@ class BottomFrame(ttk.Frame):
                 self.master.analytics.all_habits, self.master.USABLE_FREQUENCIES[frequency_name])
         else:
             habit_list = self.master.analytics.all_habits
-
         self.master.reload_center_frame(habit_list)
+        #return args to prevent
+        return args
 
     def show_no_habit_selected(self):
         message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
