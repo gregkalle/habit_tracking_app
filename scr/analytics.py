@@ -6,7 +6,7 @@ class Analytics:
     """
 
     MIN_DEFAULT_HABIT = 5
-    HABIT_LIST_TITLES = ["selected", "habit name", "description", "frequency", "current streak", "longest streak", "calender"]
+    HABIT_LIST_TITLES = ["selected", "habit name", "description", "frequency", "current streak", "longest streak", "calendar"]
 
 
     def __init__(self):

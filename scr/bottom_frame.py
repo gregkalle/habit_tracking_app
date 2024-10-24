@@ -22,13 +22,18 @@ class BottomFrame(ttk.Frame):
         self.selected_frequency = tk.StringVar()
         self.selected_value = tk.StringVar()
 
-        for button in self.BUTTONS.keys():
-            self.get_button(frame=self,text=button,function=self.BUTTONS[button]).pack(side="left")
+        self.buttons = []
+        for button_name in self.BUTTONS.keys():
+            button = self.get_button(frame=self,text=button_name,function=self.BUTTONS[button_name])
+            button.pack(side="left")
+            self.buttons.append(button)
         
+
         self.get_menu_button(frame=self,title="select periodicity",item_selection=master.SELECTABLE_FREQUENCIES,
                              selected_item=self.selected_frequency).pack(side="left")
-        self.get_menu_button(frame=self,title="sort by value",item_selection=master.SELECTABLE_VALUES
-                             ,selected_item=self.selected_value).pack(side="left")
+        
+        #self.get_menu_button(frame=self,title="sort by value",item_selection=master.SELECTABLE_VALUES
+        #                     ,selected_item=self.selected_value).pack(side="left")
         
         self.selected_frequency.trace_add("write",self.frequency_selected)
         self.selected_value.trace_add("write",self.value_selected)

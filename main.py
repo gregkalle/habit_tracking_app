@@ -17,7 +17,7 @@ class App(tk.Tk):
         self.analytics = Analytics()
         self.child_windows = []
 
-        self.geometry("800x400")
+        self.geometry("900x500")
         self.title("Habit Tracking App")
 
         self.top_frame = self.get_top_frame().pack(side="top")
@@ -37,9 +37,18 @@ class App(tk.Tk):
 
     def add_child_window(self, child):
         self.child_windows.append(child)
+        for button in self.bottom_frame.buttons:
+                button.state(["disabled"])
+        for button in self.center_frame.buttons:
+            button.state(["disabled"])
 
     def remove_child_window(self,child):
         self.child_windows.remove(child)
+        for button in self.bottom_frame.buttons:
+            button.state(["!disabled"])
+        for button in self.center_frame.buttons:
+            button.state(["!disabled"])
+
 
     def get_top_frame(self):
         top_frame = ttk.Frame(self)

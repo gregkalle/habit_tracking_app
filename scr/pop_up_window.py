@@ -30,7 +30,7 @@ class PopUpWindow(Tk):
         Override the destroy method to remove the child window reference from the main window.
         """
         try:
-            self.main_window.remove.child_window()
+            self.main_window.remove_child_window(self)
         except:
             pass
         return super().destroy()

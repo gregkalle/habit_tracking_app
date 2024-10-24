@@ -12,6 +12,7 @@ class CenterFrame(ttk.Frame):
         self.column_names = column_names
         self.habit_list = habit_list
         self.selected_habit_id = tk.IntVar(self)
+        self.buttons=[]
 
         self.set_column_names(self.column_names)
         self.pack_all_habits(self.habit_list)
@@ -37,12 +38,17 @@ class CenterFrame(ttk.Frame):
             if name == self.column_names[0]:
                 ttk.Radiobutton(self,value=habit_data[name],variable=self.selected_habit_id).grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,row=row,ipadx=10)
             elif name == self.column_names[-1]:
-                self.get_calender()
+                self.get_calendar(row=row)
             else:
                 ttk.Label(self, text=habit_data[name],anchor=tk.CENTER).grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,row=row,ipadx=30,ipady=10)
 
+    def get_calendar(self, row):
+        column = len(self.column_names)-1 + CenterFrame.COLUMN_OFFSET
+        button = ttk.Button(self,text="calendar",command=self.click_calendar,padding=10)
+        button.grid(column=column,row=row)
+        self.buttons.append(button)
 
-    def get_calender(self):
-        pass    
+    def click_calendar(self):
+        pass
 
 
