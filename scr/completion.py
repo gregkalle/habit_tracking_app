@@ -8,22 +8,23 @@ class Completion:
     DAILY = 1
     """DAILY is set to 1"""
 
-    def __init__(self, frequency = DAILY, completed_dates = [], creation_time = None):
+    def __init__(self, frequency = DAILY, completed_dates = None, creation_time = None):
         """Attributs:
         frequency (Completion.DAILY , Completion.WEEKLY)
         completed_dates
         """
-        #
         if not isinstance(frequency, int) and frequency < Completion.DAILY:
             raise ValueError("Frequency must be a positiv integer")
         self.frequency = frequency
         self.completed_dates = completed_dates
+        if self.completed_dates is None:
+            self.completed_dates=[]
         self.creation_time = creation_time
         if not creation_time:
-            self.creation_time = datetime.now() 
+            self.creation_time = datetime.now()
         for date_ in self.completed_dates:
             self.validate_date(date_)
-        
+
 
     def mark_completed(self, checked_date=None):
         """the habit is checked today or at a special date"""
@@ -31,33 +32,38 @@ class Completion:
             checked_date = date.today()
 
         self.validate_date(checked_date)
-        # set the checked date to the next periode      
-        checked_date = self.creation_time.date() + timedelta(ceil((checked_date - self.creation_time.date()).days/self.frequency) * self.frequency)
+        # set the checked date to the next periode
+        checked_date = self.creation_time.date() \
+            + timedelta(ceil((checked_date - self.creation_time.date()\
+                              ).days/self.frequency) * self.frequency)
 
         if checked_date not in self.completed_dates:
             self.completed_dates.append(checked_date)
-            
+
 
     def calculate_streak(self):
         """the actual streak count"""
         today = date.today()
-        today = self.creation_time.date() + timedelta(ceil((today - self.creation_time.date()).days/self.frequency) * self.frequency)
+        today = self.creation_time.date() +\
+            timedelta(ceil((today - self.creation_time.date()).days/self.frequency)\
+                      * self.frequency)
         streak = 0
         while today in self.completed_dates:
             streak += 1
             today -= timedelta(days=self.frequency)
         return streak
-            
+
     def calculate_longest_streak(self):
         """calculate the longest streak"""
         if not self.completed_dates:
             return 0
-            
+
         longest_streak = 1
         streak = 1
         self.completed_dates.sort()
         for i in range(1,len(self.completed_dates)):
-            if self.completed_dates[i] == self.completed_dates[i-1] + timedelta(days=self.frequency):
+            if self.completed_dates[i] ==\
+                  self.completed_dates[i-1] +timedelta(days=self.frequency):
                 streak += 1
             else:
                 streak = 1

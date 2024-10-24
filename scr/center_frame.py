@@ -1,11 +1,11 @@
-from scr.analytics import Analytics
 import tkinter as tk
 from tkinter import ttk
+from scr.analytics import Analytics
 
 class CenterFrame(ttk.Frame):
-    
+
     COLUMN_OFFSET = 1
-    
+
     def __init__(self, master, column_names, habit_list):
         super().__init__(master)
 
@@ -22,8 +22,11 @@ class CenterFrame(ttk.Frame):
     def set_column_names(self, column_names):
         "set the columnames of the data table"
         for name in column_names:
-            ttk.Label(self,text=name,anchor=tk.CENTER).grid(column=column_names.index(name)+CenterFrame.COLUMN_OFFSET, row=0,ipadx=10, ipady=20)
-    
+            ttk.Label(self,text=name,anchor=tk.CENTER).grid\
+                (column=column_names.index(name)+CenterFrame.COLUMN_OFFSET,
+                 row=0,ipadx=10, ipady=20
+                 )
+
     def pack_all_habits(self, habit_list):
         """packing the data of all habits in the data table of the center frame"""
         row = 1
@@ -36,8 +39,10 @@ class CenterFrame(ttk.Frame):
         """packing the data of a habit in the data table of the center frame"""
         for name in habit_data.keys():
             if name == self.column_names[0]:
-                ttk.Radiobutton(self,value=habit_data[name],variable=self.selected_habit_id).grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,row=row,ipadx=10)
+                ttk.Radiobutton(self,value=habit_data[name],variable=self.selected_habit_id)\
+                    .grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
+                          row=row,ipadx=10)
             else:
-                ttk.Label(self, text=habit_data[name],anchor=tk.CENTER).grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,row=row,ipadx=30,ipady=10)
-
-
+                ttk.Label(self, text=habit_data[name],anchor=tk.CENTER)\
+                    .grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
+                          row=row,ipadx=30,ipady=10)
