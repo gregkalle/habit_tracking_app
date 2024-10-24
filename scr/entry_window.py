@@ -1,8 +1,9 @@
-from scr.analytics import Analytics
 import tkinter as tk
 from tkinter import ttk
-from scr.pop_up_window import PopUpWindow
 import tkinter.messagebox as mb
+from scr.pop_up_window import PopUpWindow
+from scr.analytics import Analytics
+
 
 class EntryPopUp(PopUpWindow):
 
@@ -17,7 +18,7 @@ class EntryPopUp(PopUpWindow):
     BEHAVE_NEW_HABIT = "new habit"
     BEHAVE_CHANGE_HABIT = "change habit"
 
-    
+
     def __init__(self, main_window, behave = BEHAVE_NEW_HABIT):
         """
         Initialize the entry pop-up window.
@@ -27,7 +28,7 @@ class EntryPopUp(PopUpWindow):
             behave (str): The behavior mode of the pop-up (new habit or change habit).
         """
         super().__init__(main_window=main_window)
-        
+
         self.behave = behave
         self.title(self.behave)
 
@@ -38,8 +39,8 @@ class EntryPopUp(PopUpWindow):
         if self.behave == EntryPopUp.BEHAVE_NEW_HABIT:
             self.pack_frequency_entry_field(label_text="frequency",variable=self.habit_frequency)
         self.pack_buttons()
-        
-    
+
+
     def pack_name_entry_field(self, label_text):
         """
         Pack label and entry field and return the entry field.
@@ -71,7 +72,7 @@ class EntryPopUp(PopUpWindow):
             ttk.Radiobutton(frame,text=text.lower(),value=self.main_window.USABLE_FREQUENCIES[text],
                             variable=variable).pack(side="left")
         frame.pack()
-    
+
     def pack_buttons(self):
         """
         Create and pack the buttons for the entry pop-up window.
@@ -81,7 +82,7 @@ class EntryPopUp(PopUpWindow):
         ttk.Button(button_frame, text="Cancel", command=self.destroy, padding=10).pack(side="left")
         button_frame.pack(side="bottom")
 
-    
+
     def click_ok(self):
         """
         Handle the OK button click based on the behavior mode.
@@ -96,9 +97,11 @@ class EntryPopUp(PopUpWindow):
         """
         Handle the creation of a new habit.
         """
-        if not (self.entry_habit_name.get() and self.entry_habit_description.get() and self.habit_frequency.get()):
+        if not (self.entry_habit_name.get() and self.entry_habit_description.get()\
+                and self.habit_frequency.get()):
             message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
-                       message="The name and description of your habit may not be empty and you must select a frequency"
+                       message="The name and description of your habit may not be\
+                        empty and you must select a frequency"
                        )
             message.show()
         else:
@@ -108,35 +111,33 @@ class EntryPopUp(PopUpWindow):
             habit.save()
             try:
                 self.main_window.analytics.all_habits.append(habit)
-            except AttributeError:
-                pass
-            except:
-                pass
-            
+            except AttributeError as exc:
+                raise AttributeError("Self.main_window has no attribute analytics.all_habits"
+                                     ) from exc
+
+
             try:
                 self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
-            except AttributeError:
-                pass
-            except:
-                pass
-            
+            except AttributeError as exc:
+                raise AttributeError("Self.main_window has no attribute reload_center_frame"
+                                     ) from exc
             self.destroy()
 
     def click_okay_change_habit(self):
         """
         Handle the modification of an existing habit.
-        """  
+        """
         if not (self.entry_habit_name.get() or self.entry_habit_description.get()):
             message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
                        message="The name and description of your habit may not be empty",
                        )
             message.show()
         else:
-                habit = Analytics.change_habit_name_description(habit_id=self.main_window.center_frame.selected_habit_id.get(),
-                                                        habit_name=self.entry_habit_name.get(),
-                                                        habit_description=self.entry_habit_description.get())
-                habit.save()
-                self.main_window.analytics.load_habits()
-                self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
+            habit = Analytics.change_habit_name_description\
+                (habit_id=self.main_window.center_frame.selected_habit_id.get(),
+                habit_name=self.entry_habit_name.get(),
+                habit_description=self.entry_habit_description.get())
+            habit.save()
+            self.main_window.analytics.load_habits()
+            self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         self.destroy()
-        

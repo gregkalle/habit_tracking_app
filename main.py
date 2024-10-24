@@ -54,7 +54,7 @@ class App(tk.Tk):
         title = ttk.Label(top_frame, text="Habit Tracking App")
         title.pack()
         return top_frame
-      
+
     def reload_center_frame(self, habit_list):
         self.center_frame.destroy()
         self.center_frame = CenterFrame(self, Analytics.HABIT_LIST_TITLES, habit_list)
