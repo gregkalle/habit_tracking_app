@@ -57,9 +57,6 @@ class DatePicker(PopUpWindow):
         self.calendar.pack()
         self.pack_buttons()
 
-
-
-
     def pack_buttons(self):
         """
         Create and pack the buttons for the date picker window.
@@ -92,5 +89,8 @@ class DatePicker(PopUpWindow):
         self.main_window.analytics.load_habits()
         self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         self.destroy()
+
+
+
 
         

@@ -62,10 +62,7 @@ class BottomFrame(ttk.Frame):
     
     def click_check_date(self):
         if not self.master.center_frame.selected_habit_id.get():
-            message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
-                       message="No habit selected"
-                       )
-            message.show()
+            self.show_no_habit_selected()
         else:
             DatePicker(main_window=self.master)
 
@@ -74,20 +71,14 @@ class BottomFrame(ttk.Frame):
 
     def click_change_habit(self):
         if not self.master.center_frame.selected_habit_id.get():
-            message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
-                                message="No habit selected"
-                               )
-            message.show()
+            self.show_no_habit_selected()
         else:
             pop_up_window = EntryPopUp(main_window=self.master, behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
 
     def click_delete_habit(self):
         """delet the selected habit"""
         if not self.master.center_frame.selected_habit_id.get():
-            message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
-                       message="No habit selected"
-                       )
-            message.show()
+            self.show_no_habit_selected()
         else:    
             message = mb.askokcancel(title="Delete",
                                      message=f"Do you want to delete the selected habit with the id {self.master.center_frame.selected_habit_id.get()}?"                                     
@@ -98,7 +89,8 @@ class BottomFrame(ttk.Frame):
                 self.master.reload_center_frame(self.master.analytics.all_habits)
             
     def click_calendar(self):
-        pass
+        if not self.master.center_frame.selected_habit_id.get():
+            self.show_no_habit_selected()
 
     def frequency_selected(self, *args):
         """Execute the reload_center_frame methode in the master frame with the habits of the right frequency"""
@@ -112,3 +104,9 @@ class BottomFrame(ttk.Frame):
             
     def value_selected(self, *args):
         self.master.reload_center_frame(self.master.analytics.all_habits)
+
+    def show_no_habit_selected(self):
+        message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
+                            message="No habit selected"
+                            )
+        message.show()
