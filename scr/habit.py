@@ -26,6 +26,7 @@ class Habit():
         """load a habit from the database"""
 
         data = cls.DEFAULT_STORAGE_STRATEGY.load(habit_id)
+
         if not data:
             return None
 

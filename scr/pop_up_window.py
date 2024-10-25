@@ -1,8 +1,8 @@
-from scr.analytics import Analytics
 from tkinter import Tk
 from tkinter.ttk import Frame, Button
+from datetime import date, timedelta
 from tkcalendar import Calendar
-from datetime import date
+from scr.analytics import Analytics
 
 class PopUpWindow(Tk):
 
@@ -57,7 +57,7 @@ class DatePicker(PopUpWindow):
         button_frame = Frame(self)
         Button(button_frame, text="today", command=self.click_today,
                padding=10).pack(side="left")
-        Button(button_frame, text="selected date", command=self.click_date,
+        Button(button_frame, text="select date", command=self.click_date,
                padding=10).pack(side="left")
         Button(button_frame, text="Cancel", command=self.destroy,
                padding=10).pack(side="left")
@@ -89,3 +89,25 @@ class DatePicker(PopUpWindow):
         self.main_window.analytics.load_habits()
         self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         self.destroy()
+
+
+class PopUpCalendar(PopUpWindow):
+
+    def __init__(self, main_window, completed_dates=None, frequency=1):
+        super().__init__(main_window)
+
+        self.title("completed dates")
+        self.calendar = Calendar(master=self, selectmode="day")
+        self.calendar.pack()
+        self.completed_dates = completed_dates
+        if completed_dates is None:
+            self.completed_dates=[]
+        self.frequency=frequency
+        self.check_dates(completed_dates=self.completed_dates, frequency=self.frequency)
+
+    def check_dates(self,completed_dates,frequency):
+        for completed in completed_dates:
+            for i in range(frequency):
+                self.calendar.calevent_create(date=completed+timedelta(days=i),
+                                              text='Hello World', tags= "Message")
+                self.calendar.tag_config("Message", background='green', foreground='white')

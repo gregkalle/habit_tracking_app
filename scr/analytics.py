@@ -29,8 +29,8 @@ class Analytics:
 
 
     @classmethod
-    def get_current_tracked_habit(cls, habit_list, habit_id):
-        return [habit for habit in habit_list if habit.habit_id == habit_id][0]
+    def get_current_tracked_habit(cls, habit_id):
+        return Habit.load(habit_id=habit_id)
 
     @classmethod
     def get_habits_with_frequency(cls, habit_list, frequency):

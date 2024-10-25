@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as mb
 from scr.analytics import Analytics
-from scr.pop_up_window import DatePicker
+from scr.pop_up_window import DatePicker, PopUpCalendar
 from scr.entry_window import EntryPopUp
 
 
@@ -91,6 +91,19 @@ class BottomFrame(ttk.Frame):
     def click_calendar(self):
         if not self.master.center_frame.selected_habit_id.get():
             self.show_no_habit_selected()
+        else:
+            try:
+                habit_id = self.master.center_frame.selected_habit_id.get()
+            except AttributeError as exc:
+                raise AttributeError("There are no attribute center frame in the master") from exc
+
+            habit = Analytics.get_current_tracked_habit(habit_id=habit_id)
+            if habit is None:
+                raise ValueError("There are no habit insert to show calendar")
+
+            completed_dates = habit.completion.completed_dates
+            frequency = habit.completion.frequency
+            PopUpCalendar(main_window=self.master,completed_dates=completed_dates,frequency=frequency)
 
 
     def frequency_selected(self,*args):
