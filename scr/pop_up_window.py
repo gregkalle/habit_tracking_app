@@ -26,8 +26,8 @@ class PopUpWindow(Tk):
         try:
             self.main_window.add_child_window(self)
         except AttributeError as exc:
+            self.destroy()
             raise AttributeError("main window has no attribute add_child_window") from exc
-
 
     def destroy(self):
         """

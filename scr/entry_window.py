@@ -63,7 +63,7 @@ class EntryPopUp(PopUpWindow):
             ttk.Entry: The entry field widget.
         """
         frame = ttk.Frame(self)
-        ttk.Label(frame,anchor="w", text=label_text,padding=10).pack(side="left")
+        ttk.Label(frame,anchor="w",text=label_text,padding=10).pack(side="left")
         textbox = ttk.Entry(frame)
         textbox.pack(side="left")
         frame.pack()
@@ -78,10 +78,15 @@ class EntryPopUp(PopUpWindow):
             variable (tk.IntVar): The variable to store the selected frequency.
         """
         frame = ttk.Frame(self)
-        ttk.Label(frame,anchor="w", text=label_text,padding=10).pack(side="left")
-        for text in self.main_window.USABLE_FREQUENCIES:
-            ttk.Radiobutton(frame,text=text.lower(),value=self.main_window.USABLE_FREQUENCIES[text],
-                            variable=variable).pack(side="left")
+        ttk.Label(frame,anchor="w",text=label_text,padding=10).pack(side="left")
+        try:
+            for text in self.main_window.USABLE_FREQUENCIES:
+                ttk.Radiobutton(frame,text=text.lower(),
+                                value=self.main_window.USABLE_FREQUENCIES[text],
+                                variable=variable).pack(side="left")
+        except AttributeError as exc:
+            self.destroy()
+            raise AttributeError("main window has no attribut USABLE_FREQUENCIES") from exc
         frame.pack()
 
     def pack_buttons(self):
@@ -111,8 +116,8 @@ class EntryPopUp(PopUpWindow):
         if not (self.entry_habit_name.get() and self.entry_habit_description.get()\
                 and self.habit_frequency.get()):
             message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
-                       message="The name and description of your habit may not be\
-                        empty and you must select a frequency"
+                       message="""The name and description of your habit may not be
+                        empty and you must select a frequency"""
                        )
             message.show()
         else:
@@ -123,13 +128,15 @@ class EntryPopUp(PopUpWindow):
             try:
                 self.main_window.analytics.all_habits.append(habit)
             except AttributeError as exc:
-                raise AttributeError("Self.main_window has no attribute analytics.all_habits"
+                self.destroy()
+                raise AttributeError("Self.main_window has no attribute all_habits"
                                      ) from exc
 
 
             try:
                 self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
             except AttributeError as exc:
+                self.destroy()
                 raise AttributeError("Self.main_window has no attribute reload_center_frame"
                                      ) from exc
             self.destroy()
@@ -144,13 +151,23 @@ class EntryPopUp(PopUpWindow):
                        )
             message.show()
         else:
-            habit = Analytics.change_habit_name_description\
-                (habit_id=self.main_window.center_frame.selected_habit_id.get(),
-                habit_name=self.entry_habit_name.get(),
-                habit_description=self.entry_habit_description.get())
+            try:
+                habit = Analytics.change_habit_name_description\
+                    (habit_id=self.main_window.center_frame.selected_habit_id.get(),
+                    habit_name=self.entry_habit_name.get(),
+                    habit_description=self.entry_habit_description.get())
+            except AttributeError as exc:
+                self.destroy()
+                raise AttributeError("""main_window has no attribute center_frame
+                                     or selected_habid_id""") from exc
             habit.save()
-            self.main_window.analytics.load_habits()
-            self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
+            try:
+                self.main_window.analytics.load_habits()
+                self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
+            except AttributeError as exc:
+                self.destroy()
+                raise AttributeError("""main window has no attribute load_habits or
+                                    all_habits""") from exc
         self.destroy()
 
 
@@ -191,11 +208,21 @@ class DatePicker(PopUpWindow):
         """
         Mark the habit as completed for today and update the main window.
         """
-        habit = Analytics.get_marked_completed(\
-            habit_id=self.main_window.center_frame.selected_habit_id.get())
+        try:
+            habit = Analytics.get_marked_completed(\
+                habit_id=self.main_window.center_frame.selected_habit_id.get())
+        except AttributeError as exc:
+            self.destroy()
+            raise AttributeError("Self.main_window has no attribute selected_habit_id"
+                                ) from exc
         habit.save()
-        self.main_window.analytics.load_habits()
-        self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
+        try:
+            self.main_window.analytics.load_habits()
+            self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
+        except AttributeError as exc:
+            self.destroy()
+            raise AttributeError("Self.main_window has no attribute load_habits or all_habits"
+                                ) from exc
         self.destroy()
 
     def click_date(self):
@@ -205,13 +232,23 @@ class DatePicker(PopUpWindow):
         date_str = self.calendar.get_date()
         month, day, year = [int(date_) for date_ in date_str.split("/")]
         year = 2000 + year
-        habit = Analytics.get_marked_completed(\
-            habit_id=self.main_window.center_frame.selected_habit_id.get(),
-            date=date(year=year,month=month,day=day)
-            )
+        try:
+            habit = Analytics.get_marked_completed(\
+                habit_id=self.main_window.center_frame.selected_habit_id.get(),
+                date=date(year=year,month=month,day=day)
+                )
+        except AttributeError as exc:
+            self.destroy()
+            raise AttributeError("Self.main_window has no attribute selected_habit_id"
+                                ) from exc
         habit.save()
-        self.main_window.analytics.load_habits()
-        self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
+        try:
+            self.main_window.analytics.load_habits()
+            self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
+        except AttributeError as exc:
+            self.destroy()
+            raise AttributeError("Self.main_window has no attribute load_habits or all_habits"
+                                ) from exc
         self.destroy()
 
 
@@ -228,13 +265,17 @@ class PopUpCalendar(PopUpWindow):
     def __init__(self, main_window, completed_dates=None, frequency=1):
         super().__init__(main_window)
 
-        self.title("completed dates")
-        self.calendar = Calendar(master=self, selectmode="day")
-        self.calendar.pack()
+        self.frequency=frequency
+        if not isinstance(int, frequency):
+            raise TypeError("frequency must be integer")
+
         self.completed_dates = completed_dates
         if completed_dates is None:
             self.completed_dates=[]
-        self.frequency=frequency
+
+        self.title("completed dates")
+        self.calendar = Calendar(master=self, selectmode="day")
+        self.calendar.pack()
         self.check_dates(completed_dates=self.completed_dates, frequency=self.frequency)
 
     def check_dates(self,completed_dates,frequency):
@@ -247,15 +288,16 @@ class PopUpCalendar(PopUpWindow):
         """
         for completed in completed_dates:
             for i in range(frequency):
-
-                if i==0:
-                    #set backgroundcolor of the first day of a period to green
-                    self.calendar.calevent_create(date=completed+timedelta(days=i),
-                                              text='Hello World', tags= "Day one")
-                    self.calendar.tag_config("Day one", background='green', foreground='white')
-                else:
-                    #set backgroundcolor of the other days of a period to lightgreen
-                    self.calendar.calevent_create(date=completed+timedelta(days=i),
-                                              text='Hello World', tags= "The other days")
-                    self.calendar.tag_config("The other days", background="#49cc6c",
-                                             foreground='white')
+                #dates have to be datime.date type to be shown in the calendar
+                if isinstance(date,completed):
+                    if i==0:
+                        #set backgroundcolor of the first day of a period to green
+                        self.calendar.calevent_create(date=completed+timedelta(days=i),
+                                                text='Hello World', tags= "Day one")
+                        self.calendar.tag_config("Day one", background='green', foreground='white')
+                    else:
+                        #set backgroundcolor of the other days of a period to lightgreen
+                        self.calendar.calevent_create(date=completed+timedelta(days=i),
+                                                text='Hello World', tags= "The other days")
+                        self.calendar.tag_config("The other days", background="#49cc6c",
+                                                foreground='white')

@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as mb
 from scr.analytics import Analytics
-from scr.pop_up_window import DatePicker, PopUpCalendar
-from scr.entry_window import EntryPopUp
+from scr.entry_window import EntryPopUp, DatePicker, PopUpCalendar
 
 
 class BottomFrame(ttk.Frame):
