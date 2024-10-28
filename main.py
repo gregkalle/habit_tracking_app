@@ -44,12 +44,11 @@ class App(tk.Tk):
 
         self.top_frame = self.get_top_frame()
         self.top_frame.pack(side="top")
-        self.bottom_frame = BottomFrame(self)
-        self.bottom_frame.pack(side="bottom")
         self.center_frame = CenterFrame(self,
                                         Analytics.HABIT_LIST_TITLES, self.analytics.all_habits)
         self.center_frame.pack(side="top", fill="both")
-
+        self.bottom_frame = BottomFrame(self)
+        self.bottom_frame.pack(side="bottom")
 
     def destroy(self):
         """

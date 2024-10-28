@@ -58,40 +58,68 @@ class BottomFrame(ttk.Frame):
             frame (ttk.frame): The parent frame of the menu button.
             title (str): The title of the button.
             item_selection (tuple): The items of the menubutton.
-            selected_item (tk.StringVar): The variable witch saves the selected item of the menu button.
+            selected_item (tk.StringVar): The variable witch saves the selected
+                                          item of the menu button.
 
         Returns:
             ttk.Menubutton the menu button widget.
         """
         menu_button = ttk.Menubutton(frame, text=title)
         menu = tk.Menu(menu_button)
-
-        for item in item_selection:
-            menu.add_radiobutton(
-                label=item,
-                value=item.upper(),
-                variable=selected_item
-            )
+        try:
+            for item in item_selection:
+                menu.add_radiobutton(
+                    label=item,
+                    value=item.upper(),
+                    variable=selected_item
+                )
+        except TypeError as exc:
+            raise TypeError("Item selection is not iterable.") from exc
         menu_button["menu"] = menu
         return menu_button
 
     def click_check_date(self):
+        """
+        Takes action when the check dates button is clicked.
+
+        If no habit is selected, it shows an input error message.
+        Else it creates a new date picker window.
+        """
         if not self.master.center_frame.selected_habit_id.get():
             self.show_no_habit_selected()
         else:
             DatePicker(main_window=self.master)
 
     def click_new_habit(self):
+        """
+        Takes action when the new habit button is clicked.
+
+        It creates a new entry window to insert a new habit.
+        """
         EntryPopUp(main_window=self.master)
 
     def click_change_habit(self):
+        """
+        Takes action when the change habit button is clicked.
+
+        If no habit is selected, it shows an input error message.
+        Else it creates a new entry window to change the name
+        or the description of an existing habit.
+        """
         if not self.master.center_frame.selected_habit_id.get():
             self.show_no_habit_selected()
         else:
             EntryPopUp(main_window=self.master, behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
 
     def click_delete_habit(self):
-        """delet the selected habit"""
+        """
+        Takes action when the delete habit button is clicked.
+
+        If no habit is selected, it shows an input error message.
+        Else it shows a ask-ok-cancel message. If this message returns okay,
+        the selected habit is deleted from the database and the center frame
+        will be reloaded. 
+        """
         try:
             habit_id = self.master.center_frame.selected_habit_id.get()
         except AttributeError as exc:
@@ -110,7 +138,14 @@ class BottomFrame(ttk.Frame):
                     self.master.reload_center_frame(self.master.analytics.all_habits)
                 except AttributeError as exc:
                     raise AttributeError("No attribute analytics in master.") from exc
+
     def click_calendar(self):
+        """
+        Takes action when the calendar button is clicked.
+
+        If no habit is selected, it shows an input error message.
+        Else it create a new pop-up-calendar to show the dates when the habit is completed. 
+        """
         if not self.master.center_frame.selected_habit_id.get():
             self.show_no_habit_selected()
         else:
@@ -130,8 +165,11 @@ class BottomFrame(ttk.Frame):
 
 
     def frequency_selected(self,*args):
-        """Execute the reload_center_frame methode in the master\
-            frame with the habits of the right frequency"""
+        """
+        Takes action when a frequency is selected.
+
+        Execute the reload_center_frame methode in the master
+        frame with the habits of the right frequency"""
         frequency_name = self.selected_frequency.get()
         if frequency_name in self.master.USABLE_FREQUENCIES.keys():
             habit_list = Analytics.get_habits_with_frequency(
@@ -143,6 +181,9 @@ class BottomFrame(ttk.Frame):
         return args
 
     def show_no_habit_selected(self):
+        """
+        The error message that will be shown when no habit is selected.
+        """
         message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
                             message="No habit selected"
                             )
