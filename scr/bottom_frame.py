@@ -1,3 +1,11 @@
+"""
+NAME
+    bottom_frame: Create the bottom frame of the habit tracking app.
+
+CLASSES
+    ttk.Frame
+        BottomFrame        
+"""
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as mb
@@ -6,13 +14,17 @@ from scr.entry_window import EntryPopUp, DatePicker, PopUpCalendar
 
 
 class BottomFrame(ttk.Frame):
-
-
-
+    """
+    The bottom frame of the habit tracking app.
+    
+    Attributes:
+        selected_frequency (tkinter.StringVar): The selected frequency of the menubutton
+        buttons (list): The buttons shown in the bottom frame.
+    """
     def __init__(self, master):
         super().__init__(master)
 
-        self.__buttons = {"check date" : self.click_check_date,
+        self.__buttons_def = {"check date" : self.click_check_date,
                         "new habit" : self.click_new_habit,
                         "change habit" : self.click_change_habit,
                         "delete habit" : self.click_delete_habit,
@@ -20,18 +32,19 @@ class BottomFrame(ttk.Frame):
                         }
 
         self.selected_frequency = tk.StringVar()
-        self.selected_value = tk.StringVar()
 
         self.buttons = []
-        for button_name, button_function in self.__buttons.items():
-            button = self.get_button(frame=self,text=button_name,function=button_function)
+        for button_name, button_function in self.__buttons_def.items():
+            button = ttk.Button(master=self,text=button_name,command=button_function,padding=10)
             button.pack(side="left")
             self.buttons.append(button)
 
-
-        self.get_menu_button(frame=self,title="select periodicity",
-                            item_selection=master.SELECTABLE_FREQUENCIES,
-                            selected_item=self.selected_frequency).pack(side="left")
+        try:
+            self.get_menu_button(frame=self,title="select periodicity",
+                                item_selection=master.SELECTABLE_FREQUENCIES,
+                                selected_item=self.selected_frequency).pack(side="left")
+        except AttributeError as exc:
+            raise AttributeError("No selectable frequencies attribute in master object.") from exc
 
 
         self.selected_frequency.trace_add("write",self.frequency_selected)
@@ -53,10 +66,6 @@ class BottomFrame(ttk.Frame):
             )
         menu_button["menu"] = menu
         return menu_button
-
-    def get_button(self, frame, text, function):
-        """get a button"""
-        return ttk.Button(frame, text=text, command=function, padding=10)
 
     def click_check_date(self):
         if not self.master.center_frame.selected_habit_id.get():
@@ -102,7 +111,8 @@ class BottomFrame(ttk.Frame):
 
             completed_dates = habit.completion.completed_dates
             frequency = habit.completion.frequency
-            PopUpCalendar(main_window=self.master,completed_dates=completed_dates,frequency=frequency)
+            PopUpCalendar(main_window=self.master,completed_dates=completed_dates,
+                          frequency=frequency)
 
 
     def frequency_selected(self,*args):
