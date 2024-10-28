@@ -12,7 +12,7 @@ class Analytics:
 
     def __init__(self):
 
-        self.load_habits()
+        self.all_habits = Analytics.load_habits()
                 # creates the missing amount of habits to the MIN_DEFAULT_HABIT value
         if len(self.all_habits) < Analytics.MIN_DEFAULT_HABIT:
             for i in range(Analytics.MIN_DEFAULT_HABIT - len(self.all_habits)):
@@ -20,12 +20,12 @@ class Analytics:
                               description=f"Default habit description {i}")
                 habit.save()
                 self.all_habits.append(habit)
-
-    def load_habits(self):
+    @classmethod
+    def load_habits(cls):
         """
         load all habits
         """
-        self.all_habits = Habit.load_all()
+        return Habit.load_all()
 
 
     @classmethod

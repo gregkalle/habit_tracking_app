@@ -162,7 +162,7 @@ class EntryPopUp(PopUpWindow):
                                      or selected_habid_id""") from exc
             habit.save()
             try:
-                self.main_window.analytics.load_habits()
+                self.main_window.analytics.all_habits=Analytics.load_habits()
                 self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
             except AttributeError as exc:
                 self.destroy()
@@ -217,7 +217,7 @@ class DatePicker(PopUpWindow):
                                 ) from exc
         habit.save()
         try:
-            self.main_window.analytics.load_habits()
+            self.main_window.analytics.all_habits = Analytics.load_habits()
             self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         except AttributeError as exc:
             self.destroy()
@@ -243,7 +243,7 @@ class DatePicker(PopUpWindow):
                                 ) from exc
         habit.save()
         try:
-            self.main_window.analytics.load_habits()
+            self.main_window.analytics.all_habits = Analytics.load_habits()
             self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         except AttributeError as exc:
             self.destroy()
@@ -267,7 +267,7 @@ class PopUpCalendar(PopUpWindow):
         super().__init__(main_window)
 
         self.frequency=frequency
-        if not isinstance(int, frequency):
+        if not isinstance(frequency, int):
             raise TypeError("frequency must be integer")
 
         self.completed_dates = completed_dates
@@ -291,12 +291,13 @@ class PopUpCalendar(PopUpWindow):
             for completed in completed_dates:
                 for i in range(frequency):
                     #dates have to be datime.date type to be shown in the calendar
-                    if isinstance(date,completed):
+                    if isinstance(completed,date):
                         if i==0:
                             #set backgroundcolor of the first day of a period to green
                             self.calendar.calevent_create(date=completed+timedelta(days=i),
                                                 text='Hello World', tags= "Day one")
-                            self.calendar.tag_config("Day one", background='green', foreground='white')
+                            self.calendar.tag_config("Day one", background='green',
+                                                     foreground='white')
                         else:
                             #set backgroundcolor of the other days of a period to lightgreen
                             self.calendar.calevent_create(date=completed+timedelta(days=i),

@@ -52,9 +52,17 @@ class BottomFrame(ttk.Frame):
 
     def get_menu_button(self, frame, title, item_selection, selected_item):
         """
-        get a menu button 
-        """
+        Get a menu button
 
+        Args:
+            frame (ttk.frame): The parent frame of the menu button.
+            title (str): The title of the button.
+            item_selection (tuple): The items of the menubutton.
+            selected_item (tk.StringVar): The variable witch saves the selected item of the menu button.
+
+        Returns:
+            ttk.Menubutton the menu button widget.
+        """
         menu_button = ttk.Menubutton(frame, text=title)
         menu = tk.Menu(menu_button)
 
@@ -84,7 +92,11 @@ class BottomFrame(ttk.Frame):
 
     def click_delete_habit(self):
         """delet the selected habit"""
-        if not self.master.center_frame.selected_habit_id.get():
+        try:
+            habit_id = self.master.center_frame.selected_habit_id.get()
+        except AttributeError as exc:
+            raise AttributeError("No attribute get in master") from exc
+        if not habit_id:
             self.show_no_habit_selected()
         else:
             message = mb.askokcancel(title="Delete",
@@ -92,10 +104,12 @@ class BottomFrame(ttk.Frame):
                                     {self.master.center_frame.selected_habit_id.get()}?"
                                     )
             if message:
-                Analytics.delete_habit(habit_id=self.master.center_frame.selected_habit_id.get())
-                self.master.analytics.load_habits()
-                self.master.reload_center_frame(self.master.analytics.all_habits)
-
+                Analytics.delete_habit(habit_id=habit_id)
+                try:
+                    self.master.analytics.all_habits = Analytics.load_habits()
+                    self.master.reload_center_frame(self.master.analytics.all_habits)
+                except AttributeError as exc:
+                    raise AttributeError("No attribute analytics in master.") from exc
     def click_calendar(self):
         if not self.master.center_frame.selected_habit_id.get():
             self.show_no_habit_selected()
