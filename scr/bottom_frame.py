@@ -85,10 +85,14 @@ class BottomFrame(ttk.Frame):
         If no habit is selected, it shows an input error message.
         Else it creates a new date picker window.
         """
-        if not self.master.center_frame.selected_habit_id.get():
-            self.show_no_habit_selected()
-        else:
-            DatePicker(main_window=self.master)
+        try:
+            if not self.master.center_frame.selected_habit_id.get():
+                self.show_no_habit_selected()
+            else:
+                DatePicker(main_window=self.master)
+        except AttributeError as exc:
+            raise AttributeError("""Selected habit id does not exist
+                                 or is not of type tkinter.IntVar""") from exc
 
     def click_new_habit(self):
         """
@@ -106,10 +110,14 @@ class BottomFrame(ttk.Frame):
         Else it creates a new entry window to change the name
         or the description of an existing habit.
         """
-        if not self.master.center_frame.selected_habit_id.get():
-            self.show_no_habit_selected()
-        else:
-            EntryPopUp(main_window=self.master, behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
+        try:
+            if not self.master.center_frame.selected_habit_id.get():
+                self.show_no_habit_selected()
+            else:
+                EntryPopUp(main_window=self.master, behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
+        except AttributeError as exc:
+            raise AttributeError("""Selected habit id does not exist
+                                 or is not of type tkinter.IntVar""") from exc
 
     def click_delete_habit(self):
         """
@@ -123,7 +131,8 @@ class BottomFrame(ttk.Frame):
         try:
             habit_id = self.master.center_frame.selected_habit_id.get()
         except AttributeError as exc:
-            raise AttributeError("No attribute get in master") from exc
+            raise AttributeError("""Selected habit id does not exist
+                                 or is not of type tkinter.IntVar""") from exc
         if not habit_id:
             self.show_no_habit_selected()
         else:
@@ -146,22 +155,22 @@ class BottomFrame(ttk.Frame):
         If no habit is selected, it shows an input error message.
         Else it create a new pop-up-calendar to show the dates when the habit is completed. 
         """
-        if not self.master.center_frame.selected_habit_id.get():
-            self.show_no_habit_selected()
-        else:
-            try:
+        try:
+            if not self.master.center_frame.selected_habit_id.get():
+                self.show_no_habit_selected()
+            else:
                 habit_id = self.master.center_frame.selected_habit_id.get()
-            except AttributeError as exc:
-                raise AttributeError("There are no attribute center frame in the master") from exc
+                habit = Analytics.get_current_tracked_habit(habit_id=habit_id)
+                if habit is None:
+                    raise ValueError("There are no habit insert to show calendar")
 
-            habit = Analytics.get_current_tracked_habit(habit_id=habit_id)
-            if habit is None:
-                raise ValueError("There are no habit insert to show calendar")
-
-            completed_dates = habit.completion.completed_dates
-            frequency = habit.completion.frequency
-            PopUpCalendar(main_window=self.master,completed_dates=completed_dates,
-                          frequency=frequency)
+                completed_dates = habit.completion.completed_dates
+                frequency = habit.completion.frequency
+                PopUpCalendar(main_window=self.master,completed_dates=completed_dates,
+                              frequency=frequency)
+        except AttributeError as exc:
+            raise AttributeError("""Selected habit id does not exist
+                                 or is not of type tkinter.IntVar""") from exc
 
 
     def frequency_selected(self,*args):
