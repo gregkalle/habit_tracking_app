@@ -168,6 +168,7 @@ class SQLiteStorage(StorageStrategy):
             try:
                 transformed_dates.append(date.fromisoformat(date_value))
             except (TypeError, ValueError):
+                #Continues because invalide data should be deleted from the insert data.
                 continue
         return transformed_dates
 

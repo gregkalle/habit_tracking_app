@@ -30,6 +30,9 @@ class EntryPopUp(PopUpWindow):
     Attributes:
         BEHAVE_NEW_HABIT (str): Constant for new habit behaviour.
         BEHAVE_CHANGE_HABIT (str): Constant for change habit behaviour.
+
+    Raises: ValueError: Behave must be BEHAVE_NEW_HABIT or BEHAVE_CHANGE_HABIT
+
     """
 
     BEHAVE_NEW_HABIT = "new habit"
@@ -37,17 +40,6 @@ class EntryPopUp(PopUpWindow):
 
 
     def __init__(self, main_window, behave = BEHAVE_NEW_HABIT):
-        """
-        Initialize the entry pop-up window.
-        
-        Args:
-            main_window (Tk): The main application window.
-            behave (str): The behavior mode of the pop-up (new habit or change habit).
-
-        Raises:
-            ValueError: Behave must be BEHAVE_NEW_HABIT or BEHAVE_CHANGE_HABIT
-
-        """
         super().__init__(main_window=main_window)
 
         self.behave = behave
@@ -199,15 +191,12 @@ class DatePicker(PopUpWindow):
 
     """
     A pop-up window for selecting dates using a calendar widget.
+
+    Args:
+        main_window (tkinter.Tk): The main application window.
     """
 
     def __init__(self, main_window):
-        """
-        Initialize the date picker window.
-        
-        Args:
-            main_window (Tk): The main application window.
-        """
         super().__init__(main_window=main_window)
 
         self.title("select date")

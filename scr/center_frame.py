@@ -88,7 +88,21 @@ class CenterFrame(ttk.Frame):
             raise TypeError("Object is not iterable.") from exc
 
     def pack_habit_data(self, habit_data, row):
-        """Packing the data of one habit in the next empty row of the data table."""
+        """
+        Packing the data of one habit in the next empty row of the data table.
+        
+        Args:
+            habit_data (dict): The data of the habit that is added to the table.
+            row (int): The row which the habit data is added to.
+
+        Raises:
+            TypeError: habit data no dictionary.
+            TypeError: row is no integer.
+        """
+        if not isinstance(habit_data,dict):
+            raise TypeError("habit data no dictionary.")
+        if not isinstance(row,int):
+            raise TypeError("row is no integer.")
         for name in habit_data.keys():
             if name == self.column_names[0]:
                 ttk.Radiobutton(self,value=habit_data[name],variable=self.selected_habit_id)\
