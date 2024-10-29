@@ -43,6 +43,10 @@ class EntryPopUp(PopUpWindow):
         Args:
             main_window (Tk): The main application window.
             behave (str): The behavior mode of the pop-up (new habit or change habit).
+
+        Raises:
+            ValueError: Behave must be BEHAVE_NEW_HABIT or BEHAVE_CHANGE_HABIT
+
         """
         super().__init__(main_window=main_window)
 
@@ -85,6 +89,9 @@ class EntryPopUp(PopUpWindow):
         Args:
             label_text (str): The text for the label.
             variable (tk.IntVar): The variable to store the selected frequency.
+
+        Raises:
+            AttributeError: Main window has no attribut USABLE_FREQUENCIES
         """
         frame = ttk.Frame(self)
         ttk.Label(frame,anchor="w",text=label_text,padding=10).pack(side="left")
@@ -95,7 +102,7 @@ class EntryPopUp(PopUpWindow):
                                 variable=variable).pack(side="left")
         except AttributeError as exc:
             self.destroy()
-            raise AttributeError("main window has no attribut USABLE_FREQUENCIES") from exc
+            raise AttributeError("Main window has no attribut USABLE_FREQUENCIES") from exc
         frame.pack()
 
     def pack_buttons(self):
@@ -121,6 +128,10 @@ class EntryPopUp(PopUpWindow):
     def click_okay_new_habit(self):
         """
         Handle the creation of a new habit.
+
+        Raises:
+            AttributeError: Main window has no attribute all_habits
+            AttributeError: Main window has no attribute reload center frame
         """
         if not (self.entry_habit_name.get() and self.entry_habit_description.get()\
                 and self.habit_frequency.get()):
@@ -138,7 +149,7 @@ class EntryPopUp(PopUpWindow):
                 self.main_window.analytics.all_habits.append(habit)
             except AttributeError as exc:
                 self.destroy()
-                raise AttributeError("Self.main_window has no attribute all_habits"
+                raise AttributeError("Main window has no attribute all_habits"
                                      ) from exc
 
 
@@ -146,13 +157,17 @@ class EntryPopUp(PopUpWindow):
                 self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
             except AttributeError as exc:
                 self.destroy()
-                raise AttributeError("Self.main_window has no attribute reload_center_frame"
+                raise AttributeError("Main window has no attribute reload center frame"
                                      ) from exc
             self.destroy()
 
     def click_okay_change_habit(self):
         """
         Handle the modification of an existing habit.
+
+        Raises:
+            AttributeError: Main window has no attribute center frame or selected habid id.
+            AttributeError: Main window has no attribute load habits or all habits.
         """
         if not (self.entry_habit_name.get() or self.entry_habit_description.get()):
             message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
@@ -167,16 +182,16 @@ class EntryPopUp(PopUpWindow):
                     habit_description=self.entry_habit_description.get())
             except AttributeError as exc:
                 self.destroy()
-                raise AttributeError("""main_window has no attribute center_frame
-                                     or selected_habid_id""") from exc
+                raise AttributeError("""Main window has no attribute center frame
+                                     or selected habid id.""") from exc
             habit.save()
             try:
                 self.main_window.analytics.all_habits=Analytics.load_habits()
                 self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
             except AttributeError as exc:
                 self.destroy()
-                raise AttributeError("""main window has no attribute load_habits or
-                                    all_habits""") from exc
+                raise AttributeError("""Main window has no attribute load habits or
+                                    all habits.""") from exc
         self.destroy()
 
 
@@ -216,13 +231,17 @@ class DatePicker(PopUpWindow):
     def click_today(self):
         """
         Mark the habit as completed for today and update the main window.
+
+        Raises:
+            AttributeError: Main window has no attribute selected habit id.
+            AttributeError: Main window has no attribute load habits or all habits.
         """
         try:
             habit = Analytics.get_marked_completed(\
                 habit_id=self.main_window.center_frame.selected_habit_id.get())
         except AttributeError as exc:
             self.destroy()
-            raise AttributeError("Self.main_window has no attribute selected_habit_id"
+            raise AttributeError("Main window has no attribute selected habit id."
                                 ) from exc
         habit.save()
         try:
@@ -230,13 +249,18 @@ class DatePicker(PopUpWindow):
             self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         except AttributeError as exc:
             self.destroy()
-            raise AttributeError("Self.main_window has no attribute load_habits or all_habits"
+            raise AttributeError("Main window has no attribute load habits or all habits."
                                 ) from exc
         self.destroy()
 
     def click_date(self):
         """
         Mark the habit as completed for the selected date and update the main window.
+
+        Raises:
+            AttributeError: Main window has no attribute selected habit id.
+            AttributeError: Main window has no attribute load habits or all habits.
+
         """
         date_str = self.calendar.get_date()
         month, day, year = [int(date_) for date_ in date_str.split("/")]
@@ -248,7 +272,7 @@ class DatePicker(PopUpWindow):
                 )
         except AttributeError as exc:
             self.destroy()
-            raise AttributeError("Self.main_window has no attribute selected_habit_id"
+            raise AttributeError("Main window has no attribute selected habit id."
                                 ) from exc
         habit.save()
         try:
@@ -256,7 +280,7 @@ class DatePicker(PopUpWindow):
             self.main_window.reload_center_frame(self.main_window.analytics.all_habits)
         except AttributeError as exc:
             self.destroy()
-            raise AttributeError("Self.main_window has no attribute load_habits or all_habits"
+            raise AttributeError("Main window has no attribute load habits or all habits."
                                 ) from exc
         self.destroy()
 
@@ -271,13 +295,16 @@ class PopUpCalendar(PopUpWindow):
             completed_dates (list, optional):
                 A list of dates that have been completed. Default to None.
             frequency (int, optional): The frequency of the habit. Default to 1.
+
+        Raises:
+            TypeError: Frequency must be integer.
         """
     def __init__(self, main_window, completed_dates=None, frequency=1):
         super().__init__(main_window)
 
         self.frequency=frequency
         if not isinstance(frequency, int):
-            raise TypeError("frequency must be integer")
+            raise TypeError("Frequency must be integer.")
 
         self.completed_dates = completed_dates
         if completed_dates is None:
@@ -295,6 +322,9 @@ class PopUpCalendar(PopUpWindow):
         Args:
             completed_dates (list): A list of dates that have been completed.
             frequency (int): The frequency of the habit.
+
+        Raises:
+            TypeError: Completed dates is not iterable.
         """
         try:
             for completed in completed_dates:

@@ -23,6 +23,9 @@ class BottomFrame(ttk.Frame):
     Attributes:
         selected_frequency (tkinter.StringVar): The selected frequency of the menubutton
         buttons (list): The buttons shown in the bottom frame.
+
+    Raises:
+        AttributeError: No selectable frequencies attribute in master.
     """
     def __init__(self, master):
         super().__init__(master)
@@ -47,7 +50,7 @@ class BottomFrame(ttk.Frame):
                                 item_selection=master.SELECTABLE_FREQUENCIES,
                                 selected_item=self.selected_frequency).pack(side="left")
         except AttributeError as exc:
-            raise AttributeError("No selectable frequencies attribute in master object.") from exc
+            raise AttributeError("No selectable frequencies attribute in master.") from exc
 
 
         self.selected_frequency.trace_add("write",self.frequency_selected)
@@ -66,6 +69,10 @@ class BottomFrame(ttk.Frame):
 
         Returns:
             ttk.Menubutton the menu button widget.
+
+        Raises:
+            TypeError: Item selection is not iterable.
+            
         """
         menu_button = ttk.Menubutton(frame, text=title)
         menu = tk.Menu(menu_button)
@@ -87,6 +94,9 @@ class BottomFrame(ttk.Frame):
 
         If no habit is selected, it shows an input error message.
         Else it creates a new date picker window.
+
+        Raises:
+            AttributeError: Selected habit id does not exist or has not Attribute get().
         """
         try:
             if not self.master.center_frame.selected_habit_id.get():
@@ -95,7 +105,7 @@ class BottomFrame(ttk.Frame):
                 DatePicker(main_window=self.master)
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
-                                 or is not of type tkinter.IntVar""") from exc
+                                 or has not Attribute get().""") from exc
 
     def click_new_habit(self):
         """
@@ -112,6 +122,9 @@ class BottomFrame(ttk.Frame):
         If no habit is selected, it shows an input error message.
         Else it creates a new entry window to change the name
         or the description of an existing habit.
+
+        Raises:
+            AttributeError: Selected habit id does not exist or has not Attribute get().
         """
         try:
             if not self.master.center_frame.selected_habit_id.get():
@@ -120,7 +133,7 @@ class BottomFrame(ttk.Frame):
                 EntryPopUp(main_window=self.master, behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
-                                 or is not of type tkinter.IntVar""") from exc
+                                 or has not Attribute get().""") from exc
 
     def click_delete_habit(self):
         """
@@ -129,13 +142,18 @@ class BottomFrame(ttk.Frame):
         If no habit is selected, it shows an input error message.
         Else it shows a ask-ok-cancel message. If this message returns okay,
         the selected habit is deleted from the database and the center frame
-        will be reloaded. 
+        will be reloaded.
+
+        Raises:
+            AttributeError: Selected habit id does not exist or has not Attribute get().
+            AttributeError: No attribute analytics in master.
+            AttributeError: No attribute reload center frame in master.
         """
         try:
             habit_id = self.master.center_frame.selected_habit_id.get()
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
-                                 or is not of type tkinter.IntVar""") from exc
+                                 or has not Attribute get().""") from exc
         if not habit_id:
             self.show_no_habit_selected()
         else:
@@ -147,16 +165,23 @@ class BottomFrame(ttk.Frame):
                 Analytics.delete_habit(habit_id=habit_id)
                 try:
                     self.master.analytics.all_habits = Analytics.load_habits()
-                    self.master.reload_center_frame(self.master.analytics.all_habits)
                 except AttributeError as exc:
                     raise AttributeError("No attribute analytics in master.") from exc
+                try:
+                    self.master.reload_center_frame(self.master.analytics.all_habits)
+                except AttributeError as exc:
+                    raise AttributeError("No attribute reload center frame in master.") from exc
 
     def click_calendar(self):
         """
         Takes action when the calendar button is clicked.
 
         If no habit is selected, it shows an input error message.
-        Else it create a new pop-up-calendar to show the dates when the habit is completed. 
+        Else it create a new pop-up-calendar to show the dates when the habit is completed.
+
+        Raises:
+            AttributeError: Selected habit id does not exist or has not Attribute get().
+            ValueError: There are no Habit object insert to show calendar.
         """
         try:
             if not self.master.center_frame.selected_habit_id.get():
@@ -165,7 +190,7 @@ class BottomFrame(ttk.Frame):
                 habit_id = self.master.center_frame.selected_habit_id.get()
                 habit = Analytics.get_current_tracked_habit(habit_id=habit_id)
                 if habit is None:
-                    raise ValueError("There are no habit insert to show calendar")
+                    raise ValueError("There are no habit insert to show calendar.")
 
                 completed_dates = habit.completion.completed_dates
                 frequency = habit.completion.frequency
@@ -173,7 +198,7 @@ class BottomFrame(ttk.Frame):
                               frequency=frequency)
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
-                                 or is not of type tkinter.IntVar""") from exc
+                                 or has not Attribute get().""") from exc
 
 
     def frequency_selected(self,*args):

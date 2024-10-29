@@ -21,6 +21,9 @@ class PopUpWindow(Tk):
     
     Attributes:
         main_window (tkinter.Tk): The main application window.
+
+    Raises:
+        AttributeError: main window has no attribute add_child_window
     """
 
     def __init__(self, main_window):
@@ -35,9 +38,12 @@ class PopUpWindow(Tk):
     def destroy(self):
         """
         Override the destroy method to remove the child window reference from the main window.
+
+        Raises:
+            AttributeError: Main window has no attribut remove_child_window
         """
         try:
             self.main_window.remove_child_window(self)
         except AttributeError as exc:
-            raise AttributeError("Mai window has no attribut remove_child_window") from exc
+            raise AttributeError("Main window has no attribut remove_child_window") from exc
         return super().destroy()

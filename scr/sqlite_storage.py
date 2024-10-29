@@ -60,6 +60,9 @@ class SQLiteStorage(StorageStrategy):
         
         Args:
             habit (habit): The habit which should be saved
+
+        Raises:
+            TypeError: Object is not of type Habit.
         """
         try:
             with sqlite3.connect(self.DB_NAME) as connect:
@@ -96,7 +99,7 @@ class SQLiteStorage(StorageStrategy):
 
                 connect.commit()
         except AttributeError as exc:
-            raise TypeError("habit is not of type Habit.") from exc
+            raise TypeError("Object is not of type Habit.") from exc
 
 
     def load(self, habit_id):

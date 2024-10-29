@@ -29,6 +29,8 @@ class Completion:
         creation_time (datetime.datetime): The time when the habit is created.
                                            Default is datetime.datetime.now().
 
+    Raises:
+        ValueError: Frequency must be a positiv integer.
     """
     WEEKLY = 7
     """ WEEKLY is set to 7"""
@@ -37,7 +39,7 @@ class Completion:
 
     def __init__(self, frequency = DAILY, completed_dates = None, creation_time = None):
         if not isinstance(frequency, int) and frequency < Completion.DAILY:
-            raise ValueError("Frequency must be a positiv integer")
+            raise ValueError("Frequency must be a positiv integer.")
         self.frequency = frequency
         self.completed_dates = completed_dates
         if self.completed_dates is None:
@@ -109,9 +111,15 @@ class Completion:
             longest_streak = max(streak, longest_streak)
         return longest_streak
 
-    def validate_date(self, completed_date):
+    def validate_date(self, validation_data):
         """
-        Validate the type of the completed_date and raise a TypeError if not of type datetime.date.
+        Validates the type of the data and raises an error if not of type datetime.date.
+
+        Args:
+            validation_data (datetime.date): The data which should be validated.
+        
+        Raises:
+            TypeError: The data must be of type datetime.date.
         """
-        if not isinstance(completed_date,date):
-            raise TypeError("The elements of completed_dates must be of type datetime.date")
+        if not isinstance(validation_data,date):
+            raise TypeError("The data must be of type datetime.date.")

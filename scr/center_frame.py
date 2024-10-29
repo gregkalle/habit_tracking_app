@@ -46,7 +46,15 @@ class CenterFrame(ttk.Frame):
 
 
     def set_column_names(self, column_names):
-        "Set the column names of the data table."
+        """
+        Set the column names of the data table.
+        
+        Args:
+            column_names (list): The name of the columns of the data table.
+
+        Raises:
+            TypeError: Object is not iterable.
+        """
         try:
             for name in column_names:
                 ttk.Label(self,text=name,anchor=tk.CENTER)\
@@ -54,21 +62,30 @@ class CenterFrame(ttk.Frame):
                     row=0,ipadx=10, ipady=20
                     )
         except TypeError as exc:
-            raise TypeError("Column name is not iterable.") from exc
+            raise TypeError("Object is not iterable.") from exc
 
     def pack_all_habits(self, habit_list):
-        """Packing the data of all habits in the data table of the center frame."""
+        """
+        Packing the data of all habits in the data table of the center frame.
+        
+        Args:
+            habit_list (list): A list of the habit from which the data should be packed.
+
+        Raises:
+            TypeError: Object is not iterable.
+            TypeError: Object not of type habit.
+        """
         row = 1
         try:
             for habit in habit_list:
                 try:
                     habit_data = Analytics.habit_to_dict(habit)
                 except TypeError as exc:
-                    raise TypeError("No object of type habit.") from exc
+                    raise TypeError("Object not of type habit.") from exc
                 self.pack_habit_data(habit_data, row)
                 row += 1
         except TypeError as exc:
-            raise TypeError("Habit list is not iterable.") from exc
+            raise TypeError("Object is not iterable.") from exc
 
     def pack_habit_data(self, habit_data, row):
         """Packing the data of one habit in the next empty row of the data table."""
