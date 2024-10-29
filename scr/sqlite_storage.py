@@ -61,38 +61,42 @@ class SQLiteStorage(StorageStrategy):
         Args:
             habit (habit): The habit which should be saved
         """
-        with sqlite3.connect(self.DB_NAME) as connect:
-            with closing(connect.cursor()) as cursor:
-                if habit.habit_id:
-                    #Update existing habit data
+        try:
+            with sqlite3.connect(self.DB_NAME) as connect:
+                with closing(connect.cursor()) as cursor:
+                    if habit.habit_id:
+                        #Update existing habit data
+                        cursor.execute("""
+                                    UPDATE habit SET name = ?, description = ? WHERE id = ?
+                                    """,(habit.name, habit.description, habit.habit_id))
+
+
+                    else:
+                        #Insert new habit data
+                        cursor.execute("""
+                                    INSERT INTO habit (name, description, frequency, creation_time) VALUES (?, ?, ?, ?)
+                                    """,
+                                    (habit.name, habit.description, habit.completion.frequency,
+                                    habit.completion.creation_time.isoformat()))
+                        habit.habit_id = cursor.lastrowid
+
+                    #get existing completions
                     cursor.execute("""
-                        UPDATE habit SET name = ?, description = ? WHERE id = ?
-                    """,(habit.name, habit.description, habit.habit_id))
+                                SELECT completed_dates FROM tracking WHERE habit_id = ?
+                                """, (habit.habit_id,))
+                    existing_dates = {row[0] for row in cursor.fetchall()}
 
+                    #Insert new completions in the database
+                    for date_value in [d for d in habit.completion.completed_dates
+                                    if d not in self.isoformat_to_datetime(existing_dates)\
+                                        and isinstance(d, date)]:
+                        cursor.execute("""
+                                    INSERT INTO tracking (habit_id, completed_dates) VALUES (?, ?)
+                                    """, (habit.habit_id, date_value.isoformat()))
 
-                else:
-                    #Insert new habit data
-                    cursor.execute("""
-                        INSERT INTO habit (name, description, frequency, creation_time) VALUES (?, ?, ?, ?)
-                    """, (habit.name, habit.description, habit.completion.frequency,
-                          habit.completion.creation_time.isoformat()))
-                    habit.habit_id = cursor.lastrowid
-
-                #get existing completions
-                cursor.execute("""
-                    SELECT completed_dates FROM tracking WHERE habit_id = ?
-                """, (habit.habit_id,))
-                existing_dates = {row[0] for row in cursor.fetchall()}
-
-                #Insert new completions in the database
-                for date_value in [d for d in habit.completion.completed_dates
-                                   if d not in self.isoformat_to_datetime(existing_dates)\
-                                     and isinstance(d, date)]:
-                    cursor.execute("""
-                        INSERT INTO tracking (habit_id, completed_dates) VALUES (?, ?)
-                    """, (habit.habit_id, date_value.isoformat()))
-
-            connect.commit()
+                connect.commit()
+        except AttributeError as exc:
+            raise ValueError("habit is not of type Habit.") from exc
 
 
     def load(self, habit_id):
@@ -102,7 +106,8 @@ class SQLiteStorage(StorageStrategy):
         Args: habit_id (int): Id of the habit which should be loaded.
 
         Returns:
-            habit_data (dict): {"name":, "description":, "frequency": , "completed_dates": , "habit_id": }
+            habit_data (dict): {"name":, "description":,
+                                "frequency": , "completed_dates": , "habit_id": }
         """
         with sqlite3.connect(self.DB_NAME) as connect:
             with closing(connect.cursor()) as cursor:
