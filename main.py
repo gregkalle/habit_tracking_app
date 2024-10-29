@@ -54,12 +54,15 @@ class App(tk.Tk):
         """
         Override the destroy method to ensure all child windows are closed
         before the main window is destroyed.
+
+        Raises:
+            AttributeError: Child window has no Attribute destroy.
         """
         try:
             for child in self.child_windows:
                 child.destroy()
         except AttributeError as exc:
-            raise AttributeError("Child window has no Attribute destroy") from exc
+            raise AttributeError("Child window has no Attribute destroy.") from exc
         return super().destroy()
 
     def add_child_window(self, child):
