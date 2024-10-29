@@ -1,11 +1,37 @@
+
+"""
+NAME
+    habit
+
+DESCRIPTION
+    Contains the habit class
+
+CLASSES
+    Habit
+"""
 from scr.sqlite_storage import SQLiteStorage
 from scr.completion import Completion
 
 
 class Habit():
     """
+    The habit class
 
-    
+    Args:
+        name (str): The name of the habit
+        description (str): The description of the habit
+        frequency (int): The periodicity of the habit. Default is Completion.DAILY.
+        completed_dates (list): List of the completed dates. Default is None.
+        creation_time (datetime.datetime): The time when the habit is created. Default is None.
+        habit_id (int): The id with which is the habit stored in the database. Default is None.
+
+    Attributes:
+        DEFAULT_STORAGE_STRATEGY (SQLiteStorge): The strategy which saves
+                                                and loads habits to the database
+        name (str): The name of the habit.
+        description (str): The description of the habit.
+        habit_id (int): The id with which is the habit stored in the database.
+        completion (Completion): Class which processes the habit data.  
     """
     DEFAULT_STORAGE_STRATEGY = SQLiteStorage()
 
@@ -18,12 +44,20 @@ class Habit():
         self.habit_id = habit_id
 
     def save(self):
-        """save the habit into the database"""
+        """Save the habit into the database"""
         Habit.DEFAULT_STORAGE_STRATEGY.save(self)
 
     @classmethod
     def load(cls, habit_id):
-        """load a habit from the database"""
+        """
+        Load the habit from the database
+        
+        Args:
+            habit_id (int): The id with which is the habit stored in the database.
+
+        Returns:
+            Habit: The habit with the habit_id if existing.
+        """
 
         data = cls.DEFAULT_STORAGE_STRATEGY.load(habit_id)
 
@@ -36,11 +70,21 @@ class Habit():
 
     @classmethod
     def load_all(cls):
-        """load all habits from the database"""
+        """
+        Load all habits from the database
+        
+        Returns:
+            [Habit]: A List of all habits stored in the database.
+        """
         all_id = cls.DEFAULT_STORAGE_STRATEGY.get_all_id()
         return[cls.load(habit_id) for habit_id in all_id]
 
     @classmethod
     def delete(cls, habit_id):
-        """delete a habit in the database"""
+        """
+        Delete a habit with the id in the database
+
+        Args:
+            habit_id (int): The id with which is the habit stored in the database.
+        """
         cls.DEFAULT_STORAGE_STRATEGY.delete(habit_id)

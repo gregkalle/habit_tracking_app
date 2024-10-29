@@ -21,8 +21,8 @@ class App(tk.Tk):
     The main application class for the Habit Tracking App.
     
     Attributes:
-        USABLE_FREQUENCIES: Implemented frequency keys:["DAILY"]=1 ,["WEEKLY"]=7
-        SELECTABLE_FREQUENCIES: Selectable frequencies: ("Daily", "Weekly", "All")
+        USABLE_FREQUENCIES (dict): Implemented frequency keys:["DAILY"]=1 ,["WEEKLY"]=7
+        SELECTABLE_FREQUENCIES (tuple): Selectable frequencies: ("Daily", "Weekly", "All")
         
         analytics (Analytics): An instance of the Analytics class for managing habit data.
         child_windows (list): A list to keep track of child windows.
