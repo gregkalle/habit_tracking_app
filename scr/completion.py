@@ -111,7 +111,7 @@ class Completion:
 
     def validate_date(self, completed_date):
         """
-        Check the type of the completed_date and raise a TypeError if not of type datetime.date.
+        Validate the type of the completed_date and raise a TypeError if not of type datetime.date.
         """
         if not isinstance(completed_date,date):
             raise TypeError("The elements of completed_dates must be of type datetime.date")
