@@ -1,3 +1,14 @@
+"""
+NAME
+    storage_strategy
+
+DESCRIPTION
+    Contains the abstract class StorageStrategy
+
+CLASSES
+    ABC
+        StorageStrategy
+"""
 from abc import ABC, abstractmethod
 
 class StorageStrategy(ABC):
@@ -5,15 +16,11 @@ class StorageStrategy(ABC):
     @abstractmethod
     def save(self, habit):
         """save the habit"""
-        pass
 
     @abstractmethod
     def load(self, habit_id):
         """load the habit"""
-        pass
 
     @abstractmethod
     def delete(self, habit_id):
         """delete the habit"""
-        pass
-    
