@@ -13,6 +13,11 @@ from scr.analytics import Analytics
 class CenterFrame(ttk.Frame):
     """
     The center frame of the habit tracking app.
+
+    Args:
+        master (tkinter.Tk): The main window of the habit tracking app.
+        column_names (list): The Names of the columns of the table.
+        habit_list (list): List of the habits witch will be shown in the table.
     
     Attributes:
         COLUMN_OFFSET (int): The numbers of columns that are empty on the left of the grid.

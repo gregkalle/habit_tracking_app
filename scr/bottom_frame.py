@@ -16,6 +16,9 @@ from scr.entry_window import EntryPopUp, DatePicker, PopUpCalendar
 class BottomFrame(ttk.Frame):
     """
     The bottom frame of the habit tracking app.
+
+    Args:
+        master (tkinter.Tk): Main window of the habit tracking app
     
     Attributes:
         selected_frequency (tkinter.StringVar): The selected frequency of the menubutton

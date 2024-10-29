@@ -15,9 +15,12 @@ class PopUpWindow(Tk):
 
     """
     A base class for creating pop-up windows.
+
+    Args:
+        main_window (tkinter.Tk): The main application window.
     
     Attributes:
-        main_window (Tk): The main application window.
+        main_window (tkinter.Tk): The main application window.
     """
 
     def __init__(self, main_window):

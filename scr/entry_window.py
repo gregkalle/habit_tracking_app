@@ -20,10 +20,16 @@ class EntryPopUp(PopUpWindow):
 
     """
     A pop-up window for entering or changing habit details.
+
+    Args:
+        main_window (tkinter.Tk): The main application window.
+        behave (str): Behaviour of the entry window. Insert EntryPopUp.BEHAVE_NEW_HABIT
+            for new habit pop-up window or EntryPopUp.BEHAVE_CHANGE_HABIT for change habit window.
+            Default is EntryPopUp.BEHAVE_NEW_HABIT.
     
     Attributes:
-        BEHAVE_NEW_HABIT (str): Constant for "new habit" behavior.
-        BEHAVE_CHANGE_HABIT (str): Constant for "change habit" behavior.
+        BEHAVE_NEW_HABIT (str): Constant for new habit behaviour.
+        BEHAVE_CHANGE_HABIT (str): Constant for change habit behaviour.
     """
 
     BEHAVE_NEW_HABIT = "new habit"
@@ -41,6 +47,9 @@ class EntryPopUp(PopUpWindow):
         super().__init__(main_window=main_window)
 
         self.behave = behave
+        if (self.behave == EntryPopUp.BEHAVE_NEW_HABIT and
+               self.behave ==EntryPopUp.BEHAVE_CHANGE_HABIT):
+            raise ValueError("Behave must be BEHAVE_NEW_HABIT or BEHAVE_CHANGE_HABIT")
         self.title(self.behave)
 
         self.habit_frequency = tk.IntVar(self)
@@ -105,7 +114,7 @@ class EntryPopUp(PopUpWindow):
         """
         if self.behave == EntryPopUp.BEHAVE_NEW_HABIT:
             self.click_okay_new_habit()
-        if self.behave == EntryPopUp.BEHAVE_CHANGE_HABIT:
+        elif self.behave == EntryPopUp.BEHAVE_CHANGE_HABIT:
             self.click_okay_change_habit()
 
 

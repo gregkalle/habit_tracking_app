@@ -1,29 +1,38 @@
+"""
+NAME
+    sqlite_storage
+
+DESCRIPTION
+    Strategy to save and load habit data to and from the database based on sqlite3.
+
+CLASSES
+    StorageStrategy
+        SQLiteStorage
+"""
 import sqlite3
 from contextlib import closing
 from datetime import date, datetime
 from scr.storage_strategy import StorageStrategy
 
 class SQLiteStorage(StorageStrategy):
-    """ SQLiteStorage class.
-    
-        Attributes:
+    """ SQLiteStorage class save and load habit data to the database.
 
-        DB_NAME = "scr/habits.db"
-    """
-
-    DB_NAME = "scr/habits.db"
-
-
-    def __init__(self):
-        """Initialize a new instance of the SQLiteStorage class.
-            Create the tables in the database, if not exists:
+        Create the tables in the database, if not exists:
             
             habit (habit (id INTEGER PRIMARY KEY, name TEXT NOT NULL,
             description TEXT NOT NULL, frequency INT NOT NULL)
 
             tracking (ID INTEGER PRIMARY KEY, habit_id INTEGER, completed_dates TEXT,
              FOREIGN KEY(habit_id) REFERENCES habit (id))
-        """
+    
+        Attributes:
+            DB_NAME = "scr/habits.db"
+    """
+
+    DB_NAME = "scr/habits.db"
+
+
+    def __init__(self):
         with sqlite3.connect(self.DB_NAME) as connect:
             with closing(connect.cursor()) as cursor:
                 cursor.execute("""
@@ -46,8 +55,12 @@ class SQLiteStorage(StorageStrategy):
             connect.commit()
 
     def save(self, habit):
-        """Save the habit data to the database.
-            Returns: None"""
+        """
+        Saves the habit data to the database.
+        
+        Args:
+            habit (habit): The habit which should be saved
+        """
         with sqlite3.connect(self.DB_NAME) as connect:
             with closing(connect.cursor()) as cursor:
                 if habit.habit_id:
@@ -84,10 +97,12 @@ class SQLiteStorage(StorageStrategy):
 
     def load(self, habit_id):
         """
-        Load the data from the database.
+        Loads the data from the database.
+
+        Args: habit_id (int): Id of the habit which should be loaded.
 
         Returns:
-            dictionary: {"name":, "description":, "frequency": , "completed_dates": , "habit_id": }
+            habit_data (dict): {"name":, "description":, "frequency": , "completed_dates": , "habit_id": }
         """
         with sqlite3.connect(self.DB_NAME) as connect:
             with closing(connect.cursor()) as cursor:
@@ -114,7 +129,10 @@ class SQLiteStorage(StorageStrategy):
 
     def delete(self, habit_id):
         """
-        Delete the data with this habit_id
+        Deletes the data with this habit_id
+
+        Args:
+            habit_id (int): Id of the habit which should be deleted.
         """
         with sqlite3.connect(self.DB_NAME) as connect:
             with closing(connect.cursor()) as cursor:
@@ -130,8 +148,12 @@ class SQLiteStorage(StorageStrategy):
         """
         Transform the dates of the list from iso-format into datetime.date-format.
 
+        Args:
+            completed_dates (list): The list of the dates that should
+                                    be transformed into datetime.date.
+
         Returns:
-            [datetime.date]: The dates in datetime.date-format
+            [datetime.date]: The list of the dates in datetime.date-format.
         """
         transformed_dates = []
         for date_value in completed_dates:
@@ -144,7 +166,7 @@ class SQLiteStorage(StorageStrategy):
 
     def get_all_id(self):
         """
-        Get the list of all habit_ids of the saved habits.
+        Get the list of all habit_ids of the habits which are saved in the database.
 
         Returns:
             [int]: List of the habit_ids
