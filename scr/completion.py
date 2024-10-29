@@ -1,18 +1,41 @@
+
+"""
+NAME
+    completion
+
+DESCRIPTION
+    Processes the habit data.
+
+CLASSES
+    Completion
+"""
 from datetime import  datetime, date, timedelta
 from math import ceil
 
 class Completion:
-    """Have you completed the habit today or not"""
+    """
+    Processes the habit data.
+
+    Args:
+        frequency (int):
+        completed_dates (list):
+        creation_time (datetime.datetime):
+
+    Attributes:
+        WEEKLY (int): The frequency for a weekly habit. Is set to 7.
+        Daily (int): The frequency for a daily habit. Is set to 1.
+        frequency (int):The periodicity of the habit. Default is DAILY.
+        completed_dates (list): List of the completed dates. Default is None.
+        creation_time (datetime.datetime): The time when the habit is created.
+                                           Default is datetime.datetime.now().
+
+    """
     WEEKLY = 7
     """ WEEKLY is set to 7"""
     DAILY = 1
     """DAILY is set to 1"""
 
     def __init__(self, frequency = DAILY, completed_dates = None, creation_time = None):
-        """Attributs:
-        frequency (Completion.DAILY , Completion.WEEKLY)
-        completed_dates
-        """
         if not isinstance(frequency, int) and frequency < Completion.DAILY:
             raise ValueError("Frequency must be a positiv integer")
         self.frequency = frequency
@@ -27,7 +50,13 @@ class Completion:
 
 
     def mark_completed(self, checked_date=None):
-        """the habit is checked today or at a special date"""
+        """
+        The habit is been completed today or at a special date.
+
+        Args:
+            checked_date (datetime.date): The date of the day on which the habit is been completed.
+                                          Default is datetime.date.today().
+        """
         if checked_date is None:
             checked_date = date.today()
 
@@ -42,7 +71,12 @@ class Completion:
 
 
     def calculate_streak(self):
-        """the actual streak count"""
+        """
+        Calculate the actuell streak count.
+
+        Returns:
+            int: The number of consecutive periods the habit was fulfilled included today.
+        """
         today = date.today()
         today = self.creation_time.date() +\
             timedelta(ceil((today - self.creation_time.date()).days/self.frequency)\
@@ -54,7 +88,12 @@ class Completion:
         return streak
 
     def calculate_longest_streak(self):
-        """calculate the longest streak"""
+        """
+        Calculate the longest streak count.
+
+        Returns:
+            int: The highest number of consecutive periods the habit was fulfilled.
+        """
         if not self.completed_dates:
             return 0
 

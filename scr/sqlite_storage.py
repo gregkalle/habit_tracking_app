@@ -96,7 +96,7 @@ class SQLiteStorage(StorageStrategy):
 
                 connect.commit()
         except AttributeError as exc:
-            raise ValueError("habit is not of type Habit.") from exc
+            raise TypeError("habit is not of type Habit.") from exc
 
 
     def load(self, habit_id):
