@@ -5,6 +5,8 @@ download: gh repo clone gregkalle/habit_tracking_app
 
 install: pip install .
 
+call the habit tracking app with the command habits
+
 requirements:
 
 python <3.12
