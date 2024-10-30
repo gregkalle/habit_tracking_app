@@ -299,6 +299,7 @@ class PopUpCalendar(PopUpWindow):
         if completed_dates is None:
             self.completed_dates=[]
 
+        self.geometry("300x200")
         self.title("completed dates")
         self.calendar = Calendar(master=self, selectmode="day")
         self.calendar.pack()

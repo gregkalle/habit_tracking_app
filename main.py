@@ -112,6 +112,6 @@ class App(tk.Tk):
         self.center_frame.pack(side="top", fill="both")
 
 
-if __name__ == "__main__":
+def main():
     app = App()
     app.mainloop()
