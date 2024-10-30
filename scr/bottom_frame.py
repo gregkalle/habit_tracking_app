@@ -206,20 +206,43 @@ class BottomFrame(ttk.Frame):
         Takes action when a frequency is selected.
 
         Execute the reload_center_frame methode in the master
-        frame with the habits of the right frequency"""
+        frame with the habits of the right frequency
+
+        Raises:
+            AttributeError: The is no attribute USABLE_FREQUENCIES in master.
+            AttributeError: The is no attribute analytics in master.
+            AttributeError: The is no attribute reload center frame in master.
+        """
         frequency_name = self.selected_frequency.get()
-        if frequency_name in self.master.USABLE_FREQUENCIES.keys():
-            habit_list = Analytics.get_habits_with_frequency(
-                self.master.analytics.all_habits, self.master.USABLE_FREQUENCIES[frequency_name])
-        else:
-            habit_list = self.master.analytics.all_habits
-        self.master.reload_center_frame(habit_list)
+        try:
+            #check frequency
+            if frequency_name in self.master.USABLE_FREQUENCIES.keys():
+                try:
+                    #get the habits with selected frequency
+                    habit_list = Analytics.get_habits_with_frequency(
+                        self.master.analytics.all_habits,
+                        self.master.USABLE_FREQUENCIES[frequency_name])
+                except AttributeError() as exc:
+                    raise AttributeError("The is no attribute analytics in master.") from exc
+            else:
+                try:
+                    #get all habits
+                    habit_list = self.master.analytics.all_habits
+                except AttributeError() as exc:
+                    raise AttributeError("Tere is no attribute analytics in master.")from exc
+            try:
+                #Reload the center frame to show selected habit in app
+                self.master.reload_center_frame(habit_list)
+            except AttributeError() as exc:
+                raise AttributeError("The is no attribute reload center frame in master") from exc
+        except AttributeError() as exc:
+            raise AttributeError("There is no attribute USABLE_FREQUENCIES in master.") from exc
         #return args to prevent unused argument Pylint warning
         return args
 
     def show_no_habit_selected(self):
         """
-        The error message that will be shown when no habit is selected.
+        The error message which will be shown when no habit is selected.
         """
         message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
                             message="No habit selected"
