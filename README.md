@@ -9,6 +9,6 @@ call the habit tracking app with the command habits
 
 requirements:
 
-python <3.12
+python >=3.6
 
 tkcalendar-1.6.1
