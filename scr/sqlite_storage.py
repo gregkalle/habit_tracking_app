@@ -32,8 +32,9 @@ class SQLiteStorage(StorageStrategy):
     DB_NAME = "scr/habits.db"
 
 
-    def __init__(self):
-        with sqlite3.connect(self.DB_NAME) as connect:
+    def __init__(self, data_base = DB_NAME):
+        self.__data_base = data_base
+        with sqlite3.connect(self.__data_base) as connect:
             with closing(connect.cursor()) as cursor:
                 cursor.execute("""
                     CREATE TABLE IF NOT EXISTS habit (
@@ -65,7 +66,7 @@ class SQLiteStorage(StorageStrategy):
             TypeError: Object is not of type Habit.
         """
         try:
-            with sqlite3.connect(self.DB_NAME) as connect:
+            with sqlite3.connect(self.__data_base) as connect:
                 with closing(connect.cursor()) as cursor:
                     if habit.habit_id:
                         #Update existing habit data
@@ -112,7 +113,7 @@ class SQLiteStorage(StorageStrategy):
             habit_data (dict): {"name":, "description":,
                                 "frequency": , "completed_dates": , "habit_id": }
         """
-        with sqlite3.connect(self.DB_NAME) as connect:
+        with sqlite3.connect(self.__data_base) as connect:
             with closing(connect.cursor()) as cursor:
                 #fetch habit data
                 cursor.execute("""
@@ -142,7 +143,7 @@ class SQLiteStorage(StorageStrategy):
         Args:
             habit_id (int): Id of the habit which should be deleted.
         """
-        with sqlite3.connect(self.DB_NAME) as connect:
+        with sqlite3.connect(self.__data_base) as connect:
             with closing(connect.cursor()) as cursor:
                 cursor.execute("""
                     DELETE FROM tracking WHERE habit_id = ?
@@ -180,7 +181,7 @@ class SQLiteStorage(StorageStrategy):
         Returns:
             [int]: List of the habit_ids
         """
-        with sqlite3.connect(self.DB_NAME) as connect:
+        with sqlite3.connect(self.__data_base) as connect:
             with closing(connect.cursor()) as cursor:
                 cursor.execute("""
                     SELECT id FROM habit

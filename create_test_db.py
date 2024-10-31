@@ -1,7 +1,13 @@
+import os
 from datetime import datetime, timedelta
 from scr.habit import Habit
+from scr.sqlite_storage import SQLiteStorage
 
-storage = Habit.DEFAULT_STORAGE_STRATEGY
+TEST_DB="test_data.db"
+if os.path.exists(TEST_DB):
+    os.remove(TEST_DB)
+
+Habit.DEFAULT_STORAGE_STRATEGY = SQLiteStorage(TEST_DB)
 
 creation_time = datetime(year=2024,month=9,day=30,hour=8)
 
