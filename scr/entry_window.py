@@ -282,20 +282,26 @@ class PopUpCalendar(PopUpWindow):
         Args:
             main_window (Tk): The main application window.
             completed_dates (list, optional):
-                A list of dates that have been completed. Default to None.
-            frequency (int, optional): The frequency of the habit. Default to 1.
-            creation_date: The date the habit is created
+                A list of dates that have been completed. Default is None.
+            frequency (int, optional): The frequency of the habit. Default is 1.
+            creation_date: The date the habit is created. Default is datetime.date.today().
 
         Raises:
             TypeError: Frequency must be integer.
+            TypeError: Creation date must be of type datetime.date.
+            TypeError: Completed dates must be list or None.
         """
     def __init__(self, main_window, completed_dates=None, frequency=1, creation_date = date.today):
         super().__init__(main_window)
 
-        self.frequency=frequency
         if not isinstance(frequency, int):
             raise TypeError("Frequency must be integer.")
-
+        if not isinstance(creation_date, date):
+            raise TypeError("Creation date must be of type datetime.date.")
+        if not isinstance(completed_dates, list) and not completed_dates is None:
+            raise TypeError("Completed dates must be list or None.")
+        
+        self.frequency=frequency
         self.completed_dates = completed_dates
         if completed_dates is None:
             self.completed_dates = []
@@ -320,27 +326,34 @@ class PopUpCalendar(PopUpWindow):
         Raises:
             TypeError: Completed dates is not iterable.
         """
+        #set beckgroundcolor for the creation day
+        self.calendar.calevent_create(date=creation_date,text="Calendar",
+                                      tags= "Creation date")
+        self.calendar.tag_config("Creation date", background="red",
+                                foreground="white")
         try:
             for completed in completed_dates:
                 for i in range(frequency):
                     #dates have to be datime.date type to be shown in the calendar
                     if isinstance(completed,date):
                         if i==0:
+                            if completed == creation_date:
+                                self.calendar.calevent_create(date=completed+timedelta(days=i),
+                                                    text="Calendar", tags= "Day one equal creation date")
+                                self.calendar.tag_config("Day one equal creation date", background="red",
+                                                        foreground="green")
+                            else:
                             #set backgroundcolor of the first day of a period to green
-                            self.calendar.calevent_create(date=completed+timedelta(days=i),
-                                                text='Hello World', tags= "Day one")
-                            self.calendar.calevent_create(date=creation_date,
-                                                text='Hello World', tags= "Creation date")
-                            self.calendar.tag_config("Day one", background='green',
-                                                     foreground='white')
-                            self.calendar.tag_config("creation date", background='red',
-                                                     foreground='white')
+                                self.calendar.calevent_create(date=completed+timedelta(days=i),
+                                                    text="Calendar", tags= "Day one")
+                                self.calendar.tag_config("Day one", background="green",
+                                                        foreground="white")
                         else:
                             #set backgroundcolor of the other days of a period to lightgreen
                             self.calendar.calevent_create(date=completed+timedelta(days=i),
-                                                    text='Hello World', tags= "The other days")
+                                                    text="Calendar", tags= "The other days")
                             self.calendar.tag_config("The other days", background="#49cc6c",
-                                                    foreground='white')
+                                                    foreground="white")
         except TypeError as exc:
             self.destroy()
             raise TypeError("Completed dates is not iterable.") from exc
