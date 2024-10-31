@@ -284,11 +284,12 @@ class PopUpCalendar(PopUpWindow):
             completed_dates (list, optional):
                 A list of dates that have been completed. Default to None.
             frequency (int, optional): The frequency of the habit. Default to 1.
+            creation_date: The date the habit is created
 
         Raises:
             TypeError: Frequency must be integer.
         """
-    def __init__(self, main_window, completed_dates=None, frequency=1):
+    def __init__(self, main_window, completed_dates=None, frequency=1, creation_date = date.today):
         super().__init__(main_window)
 
         self.frequency=frequency
@@ -297,15 +298,18 @@ class PopUpCalendar(PopUpWindow):
 
         self.completed_dates = completed_dates
         if completed_dates is None:
-            self.completed_dates=[]
+            self.completed_dates = []
+        self.creation_date = creation_date
 
         self.geometry("300x200")
         self.title("completed dates")
         self.calendar = Calendar(master=self, selectmode="day")
         self.calendar.pack()
-        self.check_dates(completed_dates=self.completed_dates, frequency=self.frequency)
+        self.check_dates(completed_dates=self.completed_dates,
+                         frequency=self.frequency,
+                         creation_date=self.creation_date)
 
-    def check_dates(self,completed_dates,frequency):
+    def check_dates(self,completed_dates,frequency,creation_date):
         """
         Highlight the completed dates on the calendar.
         
@@ -325,7 +329,11 @@ class PopUpCalendar(PopUpWindow):
                             #set backgroundcolor of the first day of a period to green
                             self.calendar.calevent_create(date=completed+timedelta(days=i),
                                                 text='Hello World', tags= "Day one")
+                            self.calendar.calevent_create(date=creation_date,
+                                                text='Hello World', tags= "Creation date")
                             self.calendar.tag_config("Day one", background='green',
+                                                     foreground='white')
+                            self.calendar.tag_config("creation date", background='red',
                                                      foreground='white')
                         else:
                             #set backgroundcolor of the other days of a period to lightgreen
