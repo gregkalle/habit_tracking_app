@@ -22,7 +22,7 @@ def finding_requirements():
 
 setup(
     name="habit tracking app",
-    version="0.1.1",
+    version="0.1",
     py_modules=["main"],
     packages=find_packages(),
     install_requires=finding_requirements(),
