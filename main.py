@@ -113,5 +113,12 @@ class App(tk.Tk):
 
 
 def main():
+    """
+    Name
+        main
+    
+    DESCRIPTION
+        Excecute the habit tracking app
+    """
     app = App()
     app.mainloop()
