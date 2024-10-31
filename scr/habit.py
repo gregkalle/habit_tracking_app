@@ -43,6 +43,13 @@ class Habit():
         self.description = description or "new description"
         self.habit_id = habit_id
 
+    def __eq__(self, habit):
+        if isinstance(habit,Habit) and habit.name == self.name\
+                                   and habit.description == self.description\
+                                   and habit.habit_id == self.habit_id:
+            return True
+        return False
+
     def save(self):
         """Save the habit into the database"""
         Habit.DEFAULT_STORAGE_STRATEGY.save(self)
@@ -77,7 +84,7 @@ class Habit():
             [Habit]: A List of all habits stored in the database.
         """
         all_id = cls.DEFAULT_STORAGE_STRATEGY.get_all_id()
-        return[cls.load(habit_id) for habit_id in all_id]
+        return [cls.load(habit_id) for habit_id in all_id]
 
     @classmethod
     def delete(cls, habit_id):

@@ -123,3 +123,4 @@ class Completion:
         """
         if not isinstance(validation_data,date):
             raise TypeError("The data must be of type datetime.date.")
+

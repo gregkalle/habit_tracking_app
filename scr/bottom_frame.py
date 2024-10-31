@@ -194,8 +194,9 @@ class BottomFrame(ttk.Frame):
 
                 completed_dates = habit.completion.completed_dates
                 frequency = habit.completion.frequency
+                creation_date = habit.completion.creation_time.date()
                 PopUpCalendar(main_window=self.master,completed_dates=completed_dates,
-                              frequency=frequency)
+                              frequency=frequency, creation_date=creation_date)
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
                                  or has not Attribute get().""") from exc

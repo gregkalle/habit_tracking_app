@@ -26,7 +26,7 @@ setup(
     py_modules=["main"],
     packages=find_packages(),
     install_requires=finding_requirements(),
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     entry_points="""
         [console_scripts]
         habits=main:main
