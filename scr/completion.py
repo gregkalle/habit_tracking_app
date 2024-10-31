@@ -38,7 +38,7 @@ class Completion:
     """DAILY is set to 1"""
 
     def __init__(self, frequency = DAILY, completed_dates = None, creation_time = None):
-        if not isinstance(frequency, int) and frequency < Completion.DAILY:
+        if not isinstance(frequency, int) or frequency < Completion.DAILY:
             raise ValueError("Frequency must be a positiv integer.")
         self.frequency = frequency
         self.completed_dates = completed_dates

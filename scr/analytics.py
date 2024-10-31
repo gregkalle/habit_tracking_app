@@ -9,6 +9,7 @@ CLASSES
     Analytics
 """
 from scr.habit import Habit
+from scr.completion import Completion
 
 class Analytics:
     """
@@ -254,7 +255,7 @@ class Analytics:
         #frequency is an integer esle set values to default.
         habit_name = habit_name if isinstance(habit_name,str) else None
         habit_description = habit_description if isinstance(habit_description,str) else None
-        frequency = frequency if isinstance(frequency,int) else None
+        frequency = frequency if isinstance(frequency,int) else Completion.DAILY
 
         habit = Habit(name=habit_name,description=habit_description,frequency=frequency)
         return habit
