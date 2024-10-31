@@ -300,7 +300,7 @@ class PopUpCalendar(PopUpWindow):
             raise TypeError("Creation date must be of type datetime.date.")
         if not isinstance(completed_dates, list) and not completed_dates is None:
             raise TypeError("Completed dates must be list or None.")
-        
+
         self.frequency=frequency
         self.completed_dates = completed_dates
         if completed_dates is None:
@@ -339,8 +339,10 @@ class PopUpCalendar(PopUpWindow):
                         if i==0:
                             if completed == creation_date:
                                 self.calendar.calevent_create(date=completed+timedelta(days=i),
-                                                    text="Calendar", tags= "Day one equal creation date")
-                                self.calendar.tag_config("Day one equal creation date", background="red",
+                                                    text="Calendar",
+                                                    tags= "Day one equal creation date")
+                                self.calendar.tag_config("Day one equal creation date",
+                                                        background="red",
                                                         foreground="green")
                             else:
                             #set backgroundcolor of the first day of a period to green
