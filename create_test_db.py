@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from scr.habit import Habit
 from scr.sqlite_storage import SQLiteStorage
 
+
 TEST_DB="test_data.db"
 if os.path.exists(TEST_DB):
     os.remove(TEST_DB)
@@ -16,20 +17,17 @@ walk=[]
 for i in range(28):
     walk.append(creation_time.date() + i* timedelta(days=1))
 clean=[]
-for i in range(7,21):
+for i in [7,14]:
     clean.append(creation_time.date() + i* timedelta(days=1))
 push_up=[]
 for i in range(7,21):
     push_up.append(creation_time.date() + i* timedelta(days=1))
 apple=[]
-for i in range(14):
-    apple.append(creation_time.date() + i* timedelta(days=1))
-for i in range(21,28):
+apple_dates = list(range(14))+list(range(21,28))
+for i in apple_dates:
     apple.append(creation_time.date() + i* timedelta(days=1))
 swim=[]
-for i in range(7):
-    swim.append(creation_time.date() + i* timedelta(days=1))
-for i in range(21,28):
+for i in [0,21]:
     swim.append(creation_time.date() + i* timedelta(days=1))
 habit_data.append({"name": "Go for a walk", "description": "Walking at least 1km a day.",
          "frequency": 1, "completed_dates": walk,
