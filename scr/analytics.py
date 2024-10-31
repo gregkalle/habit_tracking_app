@@ -86,7 +86,7 @@ class Analytics:
         if not isinstance(frequency, int):
             raise TypeError("Frequency not of type integer.")
         #Check if all elements of habit_list are of type Habit
-        if not all(list(map(lambda x: isinstance(x,Habit), habit_list))):
+        if not all(list(map(isinstance, habit_list, [Habit]))):
             raise TypeError("Object not of type Habit.")
         return [habit for habit in habit_list if habit.completion.frequency == frequency]
 
@@ -106,7 +106,7 @@ class Analytics:
             TypeError: Object not of type Habit.
         """
         #Check if all elements of habit_list are of type Habit
-        if not all(list(map(lambda x: isinstance(x,Habit), habit_list))):
+        if not all(list(map(isinstance, habit_list,[Habit]))):
             raise TypeError("Object not of type Habit.")
         return {habit.habit_id : habit.completion.calculate_longest_streak()
                 for habit in habit_list}
@@ -146,7 +146,7 @@ class Analytics:
             TypeError: Object not of type Habit.
         """
         #Check if all elements of habit_list are of type Habit
-        if not all(list(map(lambda x: isinstance(x,Habit), habit_list))):
+        if not all(list(map(isinstance, habit_list, [Habit]))):
             raise TypeError("Object not of type Habit.")
         return {habit.habit_id : habit.completion.calculate_streak() for habit in habit_list}
 
@@ -230,7 +230,7 @@ class Analytics:
             TypeError: Object not of type Habit.
         """
         #Check if all elements of habit_list are of type Habit
-        if not all(list(map(lambda x: isinstance(x,Habit), habit_list))):
+        if not all(list(map(isinstance,habit_list,[Habit]))):
             raise TypeError("Object not of type Habit.")
         return [habit.habit_id for habit in habit_list]
 
