@@ -9,7 +9,6 @@ CLASSES
     Analytics
 """
 from scr.habit import Habit
-from scr.completion import Completion
 
 class Analytics:
     """
@@ -241,21 +240,29 @@ class Analytics:
         Creates and returns new habit.
 
         Args:
-            habit_name (str): The name of the new habit. If not of type string it is
-                              seted to default habit name.
+            habit_name (str): The name of the new habit.
             habit_description (str): The description of the new habit.
-                    If not of type string it is seted to default habit description.
-            frequency (int): The new habits periodicity. If not of type integer it is
-                             seted to default frequency.
+            frequency (int): The new habits periodicity.
 
         Returns:
             Habit: The new habit.
+
+        Raises:
+            TypeError: Name must be string.
+            TypeError: Description must be string.
+            TypeError: Frequency must be integer.
+            ValueError: Frequency must be greater than 0.
         """
         #check if habit_name and habit_description is a string and
         #frequency is an integer esle set values to default.
-        habit_name = habit_name if isinstance(habit_name,str) else None
-        habit_description = habit_description if isinstance(habit_description,str) else None
-        frequency = frequency if isinstance(frequency,int) else Completion.DAILY
+        if not isinstance(habit_name,str):
+            raise TypeError("Habit name must be string.")
+        if not isinstance(habit_description,str):
+            raise TypeError("Habit description must be string.")
+        if not isinstance(frequency,int):
+            raise TypeError("Frequency must be integer.")
+        if frequency<1:
+            raise ValueError("Frequency must be greater than 0.")
 
         habit = Habit(name=habit_name,description=habit_description,frequency=frequency)
         return habit
