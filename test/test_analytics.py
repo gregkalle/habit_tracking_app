@@ -33,9 +33,12 @@ def test_get_current_tracked_habit_errors():
 
 @pytest.mark.parametrize("habit_list,frequency",[(test_habit_list,1),(test_habit_list,7)])
 def test_get_habits_with_frequency(habit_list,frequency):
-    habits=Analytics.get_habits_with_frequency(habit_list=habit_list,frequency=frequency)
-    for habit in habits:
+    habits_with_frequency=Analytics.get_habits_with_frequency(habit_list=habit_list,frequency=frequency)
+    for habit in habits_with_frequency:
         assert habit.completion.frequency == frequency
+    #test if all habits with frequency is in habits with frequency.
+    habits_without_frequency = [habit for habit in habit_list if habit.completion.frequency!=frequency]
+    assert len(habits_without_frequency) == len(habit_list) - len(habits_with_frequency)
 
 @pytest.mark.parametrize("habit_list,frequency",[(test_habit_list,7)])
 def test_get_habit_with_frequency_errors(habit_list,frequency):
@@ -110,8 +113,22 @@ def test_create_new_habit_errors():
     with pytest.raises(ValueError, match="Frequency must be greater than 0."):
         Analytics.create_new_habit(habit_name="Go for a walk",habit_description="Walking at least 1km a day.",frequency=0)
 
-def test_change_habit_name_description():
-    pass
+@pytest.mark.parametrize("habit_id, habit",[(1,test_habit1),(2,test_habit2),(3,test_habit3)])
+def test_change_habit_name_description(habit_id,habit):
+    changed_habit = Analytics.change_habit_name_description(habit_id=habit_id,habit_name="New habit name.")
+    assert changed_habit.name == "New habit name."
+    changed_habit = Analytics.change_habit_name_description(habit_id=habit_id,habit_description="new description")
+    assert changed_habit.description == "new description"
+    changed_habit = Analytics.change_habit_name_description(habit_id=habit_id,habit_name="new name", habit_description="new description")
+    assert changed_habit.name == "new name" and changed_habit.description == "new description"
+    changed_habit = Analytics.change_habit_name_description(habit_id=habit_id)
+    assert changed_habit == habit
+
+def test_change_habit_name_description_errors():
+    missing_id = 0
+    with pytest.raises(ValueError, match=f"There is no habit with id {missing_id} in the database."):
+        Analytics.change_habit_name_description(habit_id=missing_id)
+
 
 def test_delete_habit():
     #neuen habit erschaffen und in db speichern, dann löschen und dann fehlermeldung checken von analytics.get_currend_tracked_habit
