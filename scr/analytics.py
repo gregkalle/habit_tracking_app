@@ -89,28 +89,9 @@ class Analytics:
             return [habit for habit in habit_list if habit.completion.frequency == frequency]
         except AttributeError as exc:
             raise TypeError("Object not of type Habit.") from exc
-    '''
-    @classmethod
-    def get_all_longest_streaks(cls, habit_list):
-        """
-        Get the longest streaks of the habits in the habit list.
 
-        Args:
-            habit_list (list): The list of habits from which
-                        the longest series should be calculated.
 
-        Returns:
-            {int: int}: The habit_id as key and the longest streak as value of a dictonary
 
-        Raises:
-            TypeError: Object not of type Habit.
-        """
-        #Check if all elements of habit_list are of type Habit
-        if not all(list(map(isinstance, habit_list,[Habit]))):
-            raise TypeError("Object not of type Habit.")
-        return {habit.habit_id : habit.completion.calculate_longest_streak()
-                for habit in habit_list}
-    '''
     @classmethod
     def get_longest_streak(cls, habit):
         """
