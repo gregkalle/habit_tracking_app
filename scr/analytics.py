@@ -83,13 +83,13 @@ class Analytics:
             TypeError: Object not of type Habit.
         """
         #Check if frequency of type integer
-        if not isinstance(frequency, int):
+        if not isinstance(frequency,int):
             raise TypeError("Frequency not of type integer.")
-        #Check if all elements of habit_list are of type Habit
-        if not all(list(map(isinstance, habit_list, [Habit]))):
-            raise TypeError("Object not of type Habit.")
-        return [habit for habit in habit_list if habit.completion.frequency == frequency]
-
+        try:
+            return [habit for habit in habit_list if habit.completion.frequency == frequency]
+        except AttributeError as exc:
+            raise TypeError("Object not of type Habit.") from exc
+    '''
     @classmethod
     def get_all_longest_streaks(cls, habit_list):
         """
@@ -110,7 +110,7 @@ class Analytics:
             raise TypeError("Object not of type Habit.")
         return {habit.habit_id : habit.completion.calculate_longest_streak()
                 for habit in habit_list}
-
+    '''
     @classmethod
     def get_longest_streak(cls, habit):
         """
