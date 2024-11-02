@@ -131,13 +131,12 @@ def test_change_habit_name_description_errors():
 
 @pytest.fixture()
 def create_deletebal_item():
-    deletable_habit = Habit(name=None,description=None)
+    deletable_habit = Habit(name=None,description=None,habit_id=7)
     deletable_habit.save()
-    return deletable_habit.habit_id
 
 def test_delete_habit(create_deletebal_item):
     #neuen habit erschaffen und in db speichern, dann löschen und dann fehlermeldung checken von analytics.get_currend_tracked_habit
-    print(create_deletebal_item)
+    pass
 
 def test_get_marked_completed():
     pass
