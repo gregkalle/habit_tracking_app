@@ -52,6 +52,8 @@ def test_get_longest_streak_errors():
     with pytest.raises(TypeError,match="Object not of type Habit."):
         Analytics.get_longest_streak("No habit object.")
 
+
+
 @pytest.mark.parametrize("habit_list",[test_habit_list])
 def test_get_habit_ids(habit_list):
     id_list = Analytics.get_habit_ids(habit_list=habit_list)
