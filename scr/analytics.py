@@ -155,25 +155,6 @@ class Analytics:
                 cls.HABIT_LIST_TITLES[5] : cls.get_longest_streak(habit)
                 }
 
-    @classmethod
-    def is_date_completed(cls, habit, date):
-        """
-        Checkes if the habit is completed at a given date.
-
-        Args:
-            habit (Habit): The habits which will be checked.
-            date (datetime.date): The date which will be checked.
-
-        Returns:
-            bool: True if habit at date completed, else False.
-
-        Raises:
-            TypeError: Object not of type Habit.
-        """
-        #check if habit of type Habit
-        if not isinstance(habit,Habit):
-            raise TypeError("Object not of type Habit.")
-        return date in habit.completion.completed_dates
 
     @classmethod
     def get_habit_ids(cls, habit_list):
