@@ -129,10 +129,15 @@ def test_change_habit_name_description_errors():
     with pytest.raises(ValueError, match=f"There is no habit with id {missing_id} in the database."):
         Analytics.change_habit_name_description(habit_id=missing_id)
 
+@pytest.fixture()
+def create_deletebal_item():
+    deletable_habit = Habit(name=None,description=None)
+    deletable_habit.save()
+    return deletable_habit.habit_id
 
-def test_delete_habit():
+def test_delete_habit(create_deletebal_item):
     #neuen habit erschaffen und in db speichern, dann löschen und dann fehlermeldung checken von analytics.get_currend_tracked_habit
-    pass
+    print(create_deletebal_item)
 
 def test_get_marked_completed():
     pass
