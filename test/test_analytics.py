@@ -1,4 +1,5 @@
 import pytest
+from freezegun import freeze_time
 from scr.analytics import Analytics
 from scr.habit import Habit
 from scr.sqlite_storage import SQLiteStorage
@@ -52,6 +53,35 @@ def test_get_longest_streak_errors():
     with pytest.raises(TypeError,match="Object not of type Habit."):
         Analytics.get_longest_streak("No habit object.")
 
+@freeze_time("2024-10-27")
+@pytest.mark.parametrize("habit_id,result",[(1,28),(2,0),(3,0),(4,7),(5,1)])
+def test_get_current_streak(habit_id,result):
+    habit = Analytics.get_current_tracked_habit(habit_id=habit_id)
+    assert Analytics.get_current_streak(habit=habit) == result
+
+def test_get_current_streak_errors():
+    with pytest.raises(TypeError,match="Object not of type Habit."):
+        Analytics.get_current_streak("No habit object.")
+
+@freeze_time("2024-10-27")
+def test_habit_to_dict():
+    key_list=["selected", "habit name", "description", "frequency","current streak", "longest streak"]
+    value_list=[4,"Eat an apple","An apple a day keeps the doctor away.",1,7,14]
+    habit_dictionary = Analytics.habit_to_dict(Analytics.get_current_tracked_habit(4))
+    for i,name in enumerate(habit_dictionary.keys()):
+        assert name == key_list[i]
+        assert habit_dictionary[name] == value_list[i]
+
+def test_habit_to_dict_errors():
+    with pytest.raises(TypeError,match="Object not of type Habit."):
+        Analytics.habit_to_dict("No habit object.")
+
+def test_habit_to_dict_error():
+    with pytest.raises(TypeError,match="Object not of type Habit."):
+        Analytics.habit_to_dict("No habit object.")
+
+def test_is_date_completet():
+    pass
 
 
 @pytest.mark.parametrize("habit_list",[test_habit_list])
@@ -59,6 +89,10 @@ def test_get_habit_ids(habit_list):
     id_list = Analytics.get_habit_ids(habit_list=habit_list)
     for j,habit_id in enumerate(id_list):
         assert j+1== habit_id
+
+def test_get_habit_ids_error():
+    with pytest.raises(TypeError,match="Object not of type Habit."):
+        Analytics.get_habit_ids([Habit(name=None,description=None),"No habit object."])
 
 @pytest.mark.parametrize("habit",[test_habit_list[0:2]])
 def test_create_new_habit(habit):

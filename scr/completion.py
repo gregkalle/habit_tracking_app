@@ -79,10 +79,10 @@ class Completion:
         Returns:
             int: The number of consecutive periods the habit was fulfilled included today.
         """
+
         today = date.today()
-        today = self.creation_time.date() +\
-            timedelta(ceil((today - self.creation_time.date()).days/self.frequency)\
-                      * self.frequency)
+        today = today - (today-self.creation_time.date())%timedelta(days=self.frequency)
+
         streak = 0
         while today in self.completed_dates:
             streak += 1
