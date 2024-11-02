@@ -80,9 +80,6 @@ def test_habit_to_dict_error():
     with pytest.raises(TypeError,match="Object not of type Habit."):
         Analytics.habit_to_dict("No habit object.")
 
-def test_is_date_completet():
-    pass
-
 
 @pytest.mark.parametrize("habit_list",[test_habit_list])
 def test_get_habit_ids(habit_list):
@@ -113,3 +110,12 @@ def test_create_new_habit_errors():
     with pytest.raises(ValueError, match="Frequency must be greater than 0."):
         Analytics.create_new_habit(habit_name="Go for a walk",habit_description="Walking at least 1km a day.",frequency=0)
 
+def test_change_habit_name_description():
+    pass
+
+def test_delete_habit():
+    #neuen habit erschaffen und in db speichern, dann löschen und dann fehlermeldung checken von analytics.get_currend_tracked_habit
+    pass
+
+def test_get_marked_completed():
+    pass
