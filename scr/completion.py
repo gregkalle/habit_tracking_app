@@ -10,7 +10,6 @@ CLASSES
     Completion
 """
 from datetime import  datetime, date, timedelta
-from math import ceil
 
 class Completion:
     """
@@ -64,9 +63,8 @@ class Completion:
 
         self.validate_date(checked_date)
         # set the checked date to the next periode
-        checked_date = self.creation_time.date() \
-            + timedelta(ceil((checked_date - self.creation_time.date()\
-                              ).days/self.frequency) * self.frequency)
+        checked_date = checked_date\
+            - (checked_date-self.creation_time.date())%timedelta(days=self.frequency)
 
         if checked_date not in self.completed_dates:
             self.completed_dates.append(checked_date)
@@ -123,4 +121,3 @@ class Completion:
         """
         if not isinstance(validation_data,date):
             raise TypeError("The data must be of type datetime.date.")
-

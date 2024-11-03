@@ -1,5 +1,4 @@
-from datetime import date, timedelta
-from math import ceil
+from datetime import date
 import pytest
 from freezegun import freeze_time
 from scr.analytics import Analytics
@@ -147,12 +146,11 @@ def test_delete_habit_errors():
     with pytest.raises(ValueError,match=f"There is no habit with id {delete_id} in the database."):
         Analytics.delete_habit(delete_id)
 
-@pytest.mark.parametrize("habit_id",[1,2])
-def test_get_marked_completed(habit_id):
-    habit = Analytics.get_marked_completed(habit_id=habit_id,date=date.today())
-    marked_date = habit.completion.creation_time.date() \
-            + timedelta(ceil((date.today() - habit.completion.creation_time.date()\
-                              ).days/habit.completion.frequency) * habit.completion.frequency)
+@pytest.mark.parametrize("habit_id, insert_date, marked_date",
+                        [(1,date(day=31,month=10,year=2024),date(day=31,month=10,year=2024)),
+                         (2,date(day=31,month=10,year=2024),date(day=28,month=10,year=2024))])
+def test_get_marked_completed(habit_id, insert_date, marked_date):
+    habit = Analytics.get_marked_completed(habit_id=habit_id,date=insert_date)
     assert marked_date in habit.completion.completed_dates
 
 def test_get_marked_completed_error():
