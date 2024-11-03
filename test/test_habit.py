@@ -1,4 +1,4 @@
-import pytest
+#import pytest
 from scr.habit import Habit
 
 def test__eq__():
