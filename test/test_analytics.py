@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+from math import ceil
 import pytest
 from freezegun import freeze_time
 from scr.analytics import Analytics
@@ -129,14 +131,31 @@ def test_change_habit_name_description_errors():
     with pytest.raises(ValueError, match=f"There is no habit with id {missing_id} in the database."):
         Analytics.change_habit_name_description(habit_id=missing_id)
 
-@pytest.fixture()
-def create_deletebal_item():
-    deletable_habit = Habit(name=None,description=None,habit_id=7)
-    deletable_habit.save()
-
-def test_delete_habit(create_deletebal_item):
+@pytest.mark.last
+def test_delete_habit():
     #neuen habit erschaffen und in db speichern, dann löschen und dann fehlermeldung checken von analytics.get_currend_tracked_habit
-    pass
+    deletable_habit = Habit(name=None,description=None)
+    deletable_habit.save()
+    delete_id = deletable_habit.habit_id
+    assert deletable_habit == Analytics.get_current_tracked_habit(habit_id=delete_id)
+    Analytics.delete_habit(habit_id=delete_id)
+    with pytest.raises(ValueError):
+        Analytics.get_current_tracked_habit(delete_id)
 
-def test_get_marked_completed():
-    pass
+def test_delete_habit_errors():
+    delete_id = 7
+    with pytest.raises(ValueError,match=f"There is no habit with id {delete_id} in the database."):
+        Analytics.delete_habit(delete_id)
+
+@pytest.mark.parametrize("habit_id",[1,2])
+def test_get_marked_completed(habit_id):
+    habit = Analytics.get_marked_completed(habit_id=habit_id,date=date.today())
+    marked_date = habit.completion.creation_time.date() \
+            + timedelta(ceil((date.today() - habit.completion.creation_time.date()\
+                              ).days/habit.completion.frequency) * habit.completion.frequency)
+    assert marked_date in habit.completion.completed_dates
+
+def test_get_marked_completed_error():
+    habit_id = 7
+    with pytest.raises(ValueError,match=f"There is no habit with id {habit_id} in the database."):
+        Analytics.get_marked_completed(habit_id=habit_id)
