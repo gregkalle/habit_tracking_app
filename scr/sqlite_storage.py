@@ -150,7 +150,12 @@ class SQLiteStorage(StorageStrategy):
 
         Args:
             habit_id (int): Id of the habit which should be deleted.
+
+        Raises:
+            ValueError: ID is not in database.
         """
+        if not habit_id in self.get_all_id():
+            raise ValueError("ID is not in database.")
         with sqlite3.connect(self.__data_base) as connect:
             with closing(connect.cursor()) as cursor:
                 cursor.execute("""
