@@ -39,7 +39,7 @@ class CenterFrame(ttk.Frame):
             self.habit_list = []
         self.selected_habit_id = tk.IntVar(self)
         self.buttons=[]
-        self.first_radio_button = True
+        self.set_first_radio_button = False
 
         self.set_column_names(self.column_names)
         self.pack_all_habits(self.habit_list)
@@ -110,9 +110,9 @@ class CenterFrame(ttk.Frame):
                 button.grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
                           row=row,ipadx=10)
 
-                if self.first_radio_button:
+                if not self.set_first_radio_button:
                     button.invoke()
-                    self.first_radio_button = False
+                    self.set_first_radio_button = True
             else:
                 ttk.Label(self, text=habit_data[name],anchor=tk.CENTER)\
                     .grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
