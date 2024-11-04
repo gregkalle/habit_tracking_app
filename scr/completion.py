@@ -100,7 +100,7 @@ class Completion:
         longest_streak = 1
         streak = 1
         self.completed_dates.sort()
-        print(self.completed_dates)
+
         for i in range(1,len(self.completed_dates)):
             if self.completed_dates[i] ==\
                   self.completed_dates[i-1] +timedelta(days=self.frequency):
