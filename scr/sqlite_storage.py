@@ -64,25 +64,31 @@ class SQLiteStorage(StorageStrategy):
 
         Raises:
             TypeError: Object is not of type Habit.
+            TypeError: Habit data has wronge type and is not savable.
         """
         try:
             with sqlite3.connect(self.__data_base) as connect:
                 with closing(connect.cursor()) as cursor:
                     if habit.habit_id:
                         #Update existing habit data
-                        cursor.execute("""
-                                    UPDATE habit SET name = ?, description = ? WHERE id = ?
-                                    """,(habit.name, habit.description, habit.habit_id))
-
+                        try:
+                            cursor.execute("""
+                                        UPDATE habit SET name = ?, description = ? WHERE id = ?
+                                        """,(habit.name, habit.description, habit.habit_id))
+                        except sqlite3.ProgrammingError as exc:
+                            raise TypeError("Habit data has wronge type and is not savable.")
 
                     else:
                         #Insert new habit data
-                        cursor.execute("""
-                                    INSERT INTO habit (name, description, frequency, creation_time) VALUES (?, ?, ?, ?)
-                                    """,
-                                    (habit.name, habit.description, habit.completion.frequency,
-                                    habit.completion.creation_time.isoformat()))
-                        habit.habit_id = cursor.lastrowid
+                        try:
+                            cursor.execute("""
+                                        INSERT INTO habit (name, description, frequency, creation_time) VALUES (?, ?, ?, ?)
+                                        """,
+                                        (habit.name, habit.description, habit.completion.frequency,
+                                        habit.completion.creation_time.isoformat()))
+                            habit.habit_id = cursor.lastrowid
+                        except sqlite3.ProgrammingError as exc:
+                            raise TypeError("Habit data has wronge type and is not savable.")
 
                     #get existing completions
                     cursor.execute("""
