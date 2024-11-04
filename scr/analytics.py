@@ -18,6 +18,9 @@ class Analytics:
         MIN_DEFAULT_HABIT (int): The minimal number of habits shown in the UI.
         HABIT_LIST_TITLES (list): The keys of the dictionary which returns the habit data.
         all_habits (list): The list of all habits stored in the database.
+
+    Raises:
+        TypeError: Habit is not savable.
     """
 
     MIN_DEFAULT_HABIT = 5
@@ -33,7 +36,10 @@ class Analytics:
             for i in range(Analytics.MIN_DEFAULT_HABIT - len(self.all_habits)):
                 habit = Habit(name = f"Default habit name {i}",
                               description=f"Default habit description {i}")
-                habit.save()
+                try:
+                    habit.save()
+                except TypeError as exc:
+                    raise TypeError("Habit is not savable.") from exc
                 self.all_habits.append(habit)
 
     @classmethod
@@ -244,10 +250,10 @@ class Analytics:
         Raises:
             ValueError: There is no habit with habit id in the database.
         """
-        habit = Habit.load(habit_id=habit_id)
-        if not habit:
-            raise ValueError(f"There is no habit with id {habit_id} in the database.")
-        Habit.delete(habit_id=habit.habit_id)
+        try:
+            Habit.delete(habit_id=habit_id)
+        except ValueError as exc:
+            raise ValueError(f"There is no habit with id {habit_id} in the database.") from exc
 
     @classmethod
     def get_marked_completed(cls, habit_id, date=None):

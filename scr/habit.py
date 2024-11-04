@@ -101,6 +101,9 @@ class Habit():
 
         Args:
             habit_id (int): The id with which is the habit stored in the database.
+
+        Raises:
+            ValueError: ID is not in database.
         """
         try:
             cls.DEFAULT_STORAGE_STRATEGY.delete(habit_id)
