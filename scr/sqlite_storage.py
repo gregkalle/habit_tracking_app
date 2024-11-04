@@ -76,7 +76,8 @@ class SQLiteStorage(StorageStrategy):
                                         UPDATE habit SET name = ?, description = ? WHERE id = ?
                                         """,(habit.name, habit.description, habit.habit_id))
                         except sqlite3.ProgrammingError as exc:
-                            raise TypeError("Habit data has wronge type and is not savable.")
+                            raise TypeError\
+                                ("Habit data has wronge type and is not savable.")from exc
 
                     else:
                         #Insert new habit data
@@ -88,7 +89,8 @@ class SQLiteStorage(StorageStrategy):
                                         habit.completion.creation_time.isoformat()))
                             habit.habit_id = cursor.lastrowid
                         except sqlite3.ProgrammingError as exc:
-                            raise TypeError("Habit data has wronge type and is not savable.")
+                            raise TypeError\
+                                ("Habit data has wronge type and is not savable.") from exc
 
                     #get existing completions
                     cursor.execute("""
