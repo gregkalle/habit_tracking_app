@@ -16,11 +16,13 @@ test_habit5=Habit(name="Swimming", description="Swim 1km in the local swimming p
 test_habit_list=[test_habit1,test_habit2,test_habit3,test_habit4,test_habit5]
 
 
-@pytest.mark.parametrize("habit",test_habit_list)
-def test_load_habits(habit):
+@pytest.mark.parametrize("habit_list",[test_habit_list])
+def test_load_habits(habit_list):
     habits = Analytics.load_habits()
-    assert habit in habits
-    assert len(habits) == 5
+    assert len(habits) == len(habit_list)
+    for habit in habits:
+        assert habit in habit_list
+    
 
 @pytest.mark.parametrize("habit, habit_id",[(habit,test_habit_list.index(habit)+1) for habit in test_habit_list])
 def test_get_current_tracked_habit(habit,habit_id):
@@ -130,7 +132,7 @@ def test_change_habit_name_description_errors():
     with pytest.raises(ValueError, match=f"There is no habit with id {missing_id} in the database."):
         Analytics.change_habit_name_description(habit_id=missing_id)
 
-@pytest.mark.last
+@pytest.mark.order(-1)
 def test_delete_habit():
     #neuen habit erschaffen und in db speichern, dann löschen und dann fehlermeldung checken von analytics.get_currend_tracked_habit
     deletable_habit = Habit(name=None,description=None)
