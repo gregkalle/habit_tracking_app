@@ -47,7 +47,7 @@ class Completion:
         if not creation_time:
             self.creation_time = datetime.now()
         for date_ in self.completed_dates:
-            self.validate_date(date_)
+            Completion.validate_date(date_)
 
 
     def mark_completed(self, checked_date=None):
@@ -61,7 +61,7 @@ class Completion:
         if checked_date is None:
             checked_date = date.today()
 
-        self.validate_date(checked_date)
+        Completion.validate_date(checked_date)
         # set the checked date to the next periode
         checked_date = checked_date\
             - (checked_date-self.creation_time.date())%timedelta(days=self.frequency)
@@ -100,6 +100,7 @@ class Completion:
         longest_streak = 1
         streak = 1
         self.completed_dates.sort()
+        print(self.completed_dates)
         for i in range(1,len(self.completed_dates)):
             if self.completed_dates[i] ==\
                   self.completed_dates[i-1] +timedelta(days=self.frequency):
@@ -109,7 +110,8 @@ class Completion:
             longest_streak = max(streak, longest_streak)
         return longest_streak
 
-    def validate_date(self, validation_data):
+    @classmethod
+    def validate_date(cls, validation_data):
         """
         Validates the type of the data and raises an error if not of type datetime.date.
 
@@ -119,5 +121,5 @@ class Completion:
         Raises:
             TypeError: The data must be of type datetime.date.
         """
-        if not isinstance(validation_data,date):
+        if not isinstance(validation_data,date) or isinstance(validation_data,datetime):
             raise TypeError("The data must be of type datetime.date.")
