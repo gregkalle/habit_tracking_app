@@ -39,6 +39,7 @@ class CenterFrame(ttk.Frame):
             self.habit_list = []
         self.selected_habit_id = tk.IntVar(self)
         self.buttons=[]
+        self.first_radio_button = True
 
         self.set_column_names(self.column_names)
         self.pack_all_habits(self.habit_list)
@@ -105,9 +106,13 @@ class CenterFrame(ttk.Frame):
             raise TypeError("row is no integer.")
         for name in habit_data.keys():
             if name == self.column_names[0]:
-                ttk.Radiobutton(self,value=habit_data[name],variable=self.selected_habit_id)\
-                    .grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
+                button = ttk.Radiobutton(self,value=habit_data[name],variable=self.selected_habit_id)
+                button.grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
                           row=row,ipadx=10)
+
+                if self.first_radio_button:
+                    button.invoke()
+                    self.first_radio_button = False
             else:
                 ttk.Label(self, text=habit_data[name],anchor=tk.CENTER)\
                     .grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
