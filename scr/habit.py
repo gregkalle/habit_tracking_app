@@ -51,8 +51,16 @@ class Habit():
         return False
 
     def save(self):
-        """Save the habit into the database"""
-        Habit.DEFAULT_STORAGE_STRATEGY.save(self)
+        """
+        Save the habit into the database
+
+        Raises:
+            TypeError: Habit is not savable.
+        """
+        try:
+            Habit.DEFAULT_STORAGE_STRATEGY.save(self)
+        except TypeError as exc:
+            raise TypeError("Habit is not savable.")from exc
 
     @classmethod
     def load(cls, habit_id):
@@ -94,4 +102,7 @@ class Habit():
         Args:
             habit_id (int): The id with which is the habit stored in the database.
         """
-        cls.DEFAULT_STORAGE_STRATEGY.delete(habit_id)
+        try:
+            cls.DEFAULT_STORAGE_STRATEGY.delete(habit_id)
+        except ValueError as exc:
+            raise ValueError("ID is not in database.") from exc
