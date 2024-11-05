@@ -29,6 +29,10 @@ class PopUpWindow(Tk):
     def __init__(self, main_window):
         super().__init__()
         self.main_window = main_window
+        #position of the child window
+        position_x = 300 + self.main_window.winfo_x()
+        position_y = 300 + self.main_window.winfo_y()
+        self.geometry(f"+{position_x}+{position_y}")
         try:
             self.main_window.add_child_window(self)
         except AttributeError as exc:
