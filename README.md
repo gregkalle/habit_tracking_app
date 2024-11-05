@@ -25,7 +25,17 @@ To create a new task, click the "new habit"-button. Enter the habit name, the ha
 To change an existing habit, select a habit and click the "change habit"-button. Enter the new name or description. Click the "OK"-button, to save the changed habit name or description to the database or click the "Cancel"-button to close the "change habit"-window without changes.
 
 ### Delete Habit
+To delete a habit from the database, select the habit and click the "delete habit"-button. Click the "OK"-button, to delete the selected habit from the database or click the "Cancel"-button to close the "Delete"-window without changes.
 
+### Calendar
+To show a calendar with the createn date and all marked dates of the habit, click the "calendar"-button.
+- The createn date is red with white number, if createn date is not marked.
+- The createn date is red with green number, if createn date is marked.
+- First date of the period in which the habit was fulfilled is green. If the frequency is one, it is the date on which the habit was fulfilled.
+- The other dates of the period in which the habit was fulfilled are light green. They are only shown if the habit frequency is not daily (1).
+
+### Select periodicity
+To show the daily, weekly or all habits in the app, select the periodicity with the "select periodicity"-button.
 
 ## License
 
