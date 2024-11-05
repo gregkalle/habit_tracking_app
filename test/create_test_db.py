@@ -1,10 +1,17 @@
+"""
+NAME
+    create_test_db
+
+DESCRIPTION
+    Creates a test database in test/ folder with which the app can be tested.
+"""
 import os
 from datetime import datetime, timedelta
 from scr.habit import Habit
 from scr.sqlite_storage import SQLiteStorage
 
 
-TEST_DB="test_data.db"
+TEST_DB="test/test_data.db"
 if os.path.exists(TEST_DB):
     os.remove(TEST_DB)
 
