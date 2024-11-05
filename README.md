@@ -1,14 +1,21 @@
-# habit_tracking_app
-Creating good habits and breaking bad ones is no easy task. To keep track of certain habits or achieving personal  goals, more and more people rely on so called habit trackers to help them throughout the day.
+# Habit Tracking App
+Habit Tracking App is an application to track your daily and weekly tasks to build good and break bad habits.  
 
-download: gh repo clone gregkalle/habit_tracking_app
+## Installation
+Download the repository:
+```bash
+gh repo clone gregkalle/habit_tracking_app
+```
+Install the setup.py:
+```bash
+pip install --editable .
+```
+## Usage
+To run the habit tracking app, use the following command:
+```bash
+habits
+```
 
-install: pip install .
+## License
 
-call the habit tracking app with the command habits
-
-requirements:
-
-python >=3.6
-
-tkcalendar-1.6.1
+[MIT](https://choosealicense.com/licenses/mit/)
