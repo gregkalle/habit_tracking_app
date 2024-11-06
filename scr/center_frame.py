@@ -8,7 +8,7 @@ CLASSES
 """
 import tkinter as tk
 from tkinter import ttk
-from scr.analytics import Analytics
+from scr.habit import Habit
 
 class CenterFrame(ttk.Frame):
     """
@@ -40,11 +40,9 @@ class CenterFrame(ttk.Frame):
         self.selected_habit_id = tk.IntVar(self)
         self.buttons=[]
         self.set_first_radio_button = False
-
-        self.set_column_names(self.column_names)
-        self.pack_all_habits(self.habit_list)
+        self.set_column_names(column_names=self.column_names)
+        self.pack_all_habits(habit_list=self.habit_list)
         self.columnconfigure(0, minsize=10)
-
 
     def set_column_names(self, column_names):
         """
@@ -57,9 +55,9 @@ class CenterFrame(ttk.Frame):
             TypeError: Object is not iterable.
         """
         try:
-            for name in column_names:
+            for i,name in enumerate(column_names):
                 ttk.Label(self,text=name,anchor=tk.CENTER)\
-                    .grid(column=column_names.index(name)+CenterFrame.COLUMN_OFFSET,
+                    .grid(column=i+CenterFrame.COLUMN_OFFSET,
                     row=0,ipadx=10, ipady=20
                     )
         except TypeError as exc:
@@ -76,19 +74,13 @@ class CenterFrame(ttk.Frame):
             TypeError: Object is not iterable.
             TypeError: Object not of type habit.
         """
-        row = 1
         try:
-            for habit in habit_list:
-                try:
-                    habit_data = Analytics.habit_to_dict(habit)
-                except TypeError as exc:
-                    raise TypeError("Object not of type habit.") from exc
-                self.pack_habit_data(habit_data, row)
-                row += 1
+            for row,habit in enumerate(habit_list,start=1):
+                self.pack_habit(habit_data=Habit.habit_data(habit),row=row)
         except TypeError as exc:
             raise TypeError("Object is not iterable.") from exc
 
-    def pack_habit_data(self, habit_data, row):
+    def pack_habit(self, habit_data, row):
         """
         Packing the data of one habit in the next empty row of the data table.
         
@@ -100,21 +92,21 @@ class CenterFrame(ttk.Frame):
             TypeError: habit data no dictionary.
             TypeError: row is no integer.
         """
-        if not isinstance(habit_data,dict):
-            raise TypeError("habit data no dictionary.")
+        #if not isinstance(habit_data,list):
+        #    raise TypeError("habit is no Habit.")
         if not isinstance(row,int):
             raise TypeError("row is no integer.")
-        for name in habit_data.keys():
-            if name == self.column_names[0]:
-                button = ttk.Radiobutton(self,value=habit_data[name],
+        for i,data in enumerate(habit_data):
+            if i==0:
+                button = ttk.Radiobutton(self,value=data,
                                          variable=self.selected_habit_id)
-                button.grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
+                button.grid(column=i+CenterFrame.COLUMN_OFFSET,
                           row=row,ipadx=10)
 
                 if not self.set_first_radio_button:
                     button.invoke()
                     self.set_first_radio_button = True
             else:
-                ttk.Label(self, text=habit_data[name],anchor=tk.CENTER)\
-                    .grid(column=self.column_names.index(name)+CenterFrame.COLUMN_OFFSET,
+                ttk.Label(self, text=str(data),anchor=tk.CENTER)\
+                    .grid(column=i+CenterFrame.COLUMN_OFFSET,
                           row=row,ipadx=30,ipady=10)

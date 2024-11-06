@@ -9,7 +9,8 @@ CLASSES
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as mb
-from scr.analytics import Analytics
+import scr.analytics as ana
+from scr.habit import Habit
 from scr.entry_window import EntryPopUp, DatePicker, PopUpCalendar
 
 
@@ -30,6 +31,7 @@ class BottomFrame(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
+
         self.__buttons_def = {"check date" : self.click_check_date,
                         "new habit" : self.click_new_habit,
                         "change habit" : self.click_change_habit,
@@ -47,7 +49,7 @@ class BottomFrame(ttk.Frame):
 
         try:
             self.get_menu_button(frame=self,title="select periodicity",
-                                item_selection=master.SELECTABLE_FREQUENCIES,
+                                item_selection=self.master.SELECTABLE_FREQUENCIES,
                                 selected_item=self.selected_frequency).pack(side="left")
         except AttributeError as exc:
             raise AttributeError("No selectable frequencies attribute in master.") from exc
@@ -162,13 +164,13 @@ class BottomFrame(ttk.Frame):
                                     {self.master.center_frame.selected_habit_id.get()}?"
                                     )
             if message:
-                Analytics.delete_habit(habit_id=habit_id)
+                Habit.delete(habit_id=habit_id)
                 try:
-                    self.master.analytics.all_habits = Analytics.load_habits()
+                    self.master.all_habits = Habit.load_all()
                 except AttributeError as exc:
                     raise AttributeError("No attribute analytics in master.") from exc
                 try:
-                    self.master.reload_center_frame(self.master.analytics.all_habits)
+                    self.master.reload_center_frame(self.master.all_habits)
                 except AttributeError as exc:
                     raise AttributeError("No attribute reload center frame in master.") from exc
 
@@ -188,7 +190,7 @@ class BottomFrame(ttk.Frame):
                 self.show_no_habit_selected()
             else:
                 habit_id = self.master.center_frame.selected_habit_id.get()
-                habit = Analytics.get_current_tracked_habit(habit_id=habit_id)
+                habit = ana.get_current_tracked_habit(habit_list=self.master.all_habits,habit_id=habit_id)
                 if habit is None:
                     raise ValueError("There are no habit insert to show calendar.")
 
@@ -220,15 +222,15 @@ class BottomFrame(ttk.Frame):
             if frequency_name in self.master.USABLE_FREQUENCIES.keys():
                 try:
                     #get the habits with selected frequency
-                    habit_list = Analytics.get_habits_with_frequency(
-                        self.master.analytics.all_habits,
+                    habit_list = ana.get_habit_with_frequency(
+                        self.master.all_habits,
                         self.master.USABLE_FREQUENCIES[frequency_name])
                 except AttributeError() as exc:
                     raise AttributeError("The is no attribute analytics in master.") from exc
             else:
                 try:
                     #get all habits
-                    habit_list = self.master.analytics.all_habits
+                    habit_list = self.master.all_habits
                 except AttributeError() as exc:
                     raise AttributeError("Tere is no attribute analytics in master.")from exc
             try:

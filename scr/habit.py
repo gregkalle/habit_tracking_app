@@ -9,6 +9,7 @@ DESCRIPTION
 CLASSES
     Habit
 """
+import scr.analytics as ana
 from scr.sqlite_storage import SQLiteStorage
 from scr.completion import Completion
 
@@ -109,3 +110,56 @@ class Habit():
             cls.DEFAULT_STORAGE_STRATEGY.delete(habit_id)
         except ValueError as exc:
             raise ValueError("ID is not in database.") from exc
+        
+    @classmethod
+    def change_habit_name_description(cls, habit_id, habit_name=None, habit_description=None):
+        """
+        Changes the name or the description of the habit with given id.
+
+        Args:
+            habit_id (int): The id of the habit which should be changed.
+            habit_name (str): The new name of the habit. Default is None.
+            habit_description (str): The new description of the habit. Default is None.
+
+        Returns:
+            Habit: The habit with changed name or description.
+
+        Raises:
+            ValueError: There is no habit with habit id in the database.
+        """
+        habit = Habit.load(habit_id=habit_id)
+        if not habit:
+            raise ValueError(f"There is no habit with id {habit_id} in the database.")
+        if habit_name:
+            habit.name = habit_name
+        if habit_description:
+            habit.description = habit_description
+        return habit
+
+    @classmethod
+    def habit_data(cls, habit):
+        """
+        Returns the habit data as a tuple.
+
+        Returns:
+            (habit_id (int), habit_name (str), description (str),
+            frequency (int), current_streak (int), longest_streak (int)
+
+        Raises:
+            TypeError: "Object not of type Habit.
+        """
+        #check if habit of type Habit
+        if not isinstance(habit,Habit):
+            raise TypeError("Object not of type Habit.")
+        
+        return (habit.habit_id,
+                habit.name,
+                habit.description,
+                habit.completion.frequency,
+                ana.get_current_streak(completed_dates=habit.completion.completed_dates,
+                                       frequency=habit.completion.frequency,
+                                       creation_time=habit.completion.creation_time),
+                ana.get_longest_streak(completed_dates=habit.completion.completed_dates,
+                                       frequency=habit.completion.frequency,
+                                       creation_time=habit.completion.creation_time))
+    

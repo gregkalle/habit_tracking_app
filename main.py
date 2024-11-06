@@ -11,7 +11,7 @@ CLASSES
 """
 import tkinter as tk
 from tkinter import ttk
-from scr.analytics import Analytics
+from scr.habit import Habit
 from scr.center_frame import CenterFrame
 from scr.bottom_frame import BottomFrame
 
@@ -32,11 +32,14 @@ class App(tk.Tk):
     """
     USABLE_FREQUENCIES = {"DAILY" : 1, "WEEKLY" : 7}
     SELECTABLE_FREQUENCIES = ("Daily", "Weekly", "All")
+    HABIT_LIST_TITLES = ["selected", "habit name", "description", "frequency",
+                         "current streak", "longest streak"]
+
 
     def __init__(self):
         super().__init__()
 
-        self.analytics = Analytics()
+        self.all_habits = Habit.load_all()
         self.child_windows = []
 
         self.geometry("900x450")
@@ -44,8 +47,8 @@ class App(tk.Tk):
 
         self.top_frame = self.get_top_frame()
         self.top_frame.pack(side="top")
-        self.center_frame = CenterFrame(self,
-                                        Analytics.HABIT_LIST_TITLES, self.analytics.all_habits)
+        self.center_frame = CenterFrame(self,column_names=self.HABIT_LIST_TITLES,
+                                        habit_list=self.all_habits)
         self.center_frame.pack(side="top", fill="both")
         self.bottom_frame = BottomFrame(self)
         self.bottom_frame.pack(side="bottom")
@@ -108,7 +111,7 @@ class App(tk.Tk):
             habit_list (list): The updated list of habits.
         """
         self.center_frame.destroy()
-        self.center_frame = CenterFrame(self, Analytics.HABIT_LIST_TITLES, habit_list)
+        self.center_frame = CenterFrame(self, App.HABIT_LIST_TITLES, habit_list)
         self.center_frame.pack(side="top", fill="both")
 
 
