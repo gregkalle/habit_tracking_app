@@ -26,9 +26,10 @@ class PopUpWindow(Tk):
         AttributeError: main window has no attribute add_child_window
     """
 
-    def __init__(self, main_window):
+    def __init__(self, main_window, habit_id=None):
         super().__init__()
         self.main_window = main_window
+        self.habit_id = habit_id
         #position of the child window
         position_x = 300 + self.main_window.winfo_x()
         position_y = 300 + self.main_window.winfo_y()

@@ -11,6 +11,7 @@ CLASSES
 """
 import tkinter as tk
 from tkinter import ttk
+import scr.analytics as ana
 from scr.habit import Habit
 from scr.center_frame import CenterFrame
 from scr.bottom_frame import BottomFrame
@@ -30,8 +31,8 @@ class App(tk.Tk):
         bottom_frame (BottomFrame): The bottom frame of the application.
         center_frame (CenterFrame): The center frame of the application displaying the habit data.
     """
-    USABLE_FREQUENCIES = {"DAILY" : 1, "WEEKLY" : 7}
-    SELECTABLE_FREQUENCIES = ("Daily", "Weekly", "All")
+    USABLE_FREQUENCIES = {"Daily" : 1, "Weekly" : 7}
+    SELECTABLE_FREQUENCIES = ("Daily", "Weekly", "Selected", "All")
     HABIT_LIST_TITLES = ["selected", "habit name", "description", "frequency",
                          "current streak", "longest streak"]
 
@@ -100,7 +101,9 @@ class App(tk.Tk):
         """
         top_frame = ttk.Frame(self)
         title = ttk.Label(top_frame, text="Habit Tracking App")
-        title.pack()
+        title.pack(side="top")
+        label = ttk.Label(top_frame,text=f"Overall longest streak is {ana.get_longest_streak_of_all(habit_list=self.all_habits)}")
+        label.pack(side="top")
         return top_frame
 
     def reload_center_frame(self, habit_list):

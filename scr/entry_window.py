@@ -40,8 +40,8 @@ class EntryPopUp(PopUpWindow):
     BEHAVE_CHANGE_HABIT = "change habit"
 
 
-    def __init__(self, main_window, behave = BEHAVE_NEW_HABIT):
-        super().__init__(main_window=main_window)
+    def __init__(self, main_window, habit_id, behave = BEHAVE_NEW_HABIT):
+        super().__init__(main_window=main_window,habit_id=habit_id)
 
         self.behave = behave
         if (self.behave == EntryPopUp.BEHAVE_NEW_HABIT and
@@ -170,7 +170,7 @@ class EntryPopUp(PopUpWindow):
         else:
             try:
                 habit = Habit.change_habit_name_description\
-                    (habit_id=self.main_window.center_frame.selected_habit_id.get(),
+                    (habit_id=self.habit_id,
                     habit_name=self.entry_habit_name.get(),
                     habit_description=self.entry_habit_description.get())
             except AttributeError as exc:
@@ -197,14 +197,13 @@ class DatePicker(PopUpWindow):
         main_window (tkinter.Tk): The main application window.
     """
 
-    def __init__(self, main_window):
-        super().__init__(main_window=main_window)
+    def __init__(self, main_window, habit_id):
+        super().__init__(main_window=main_window,habit_id=habit_id)
 
         self.title("select date")
         self.calendar = Calendar(master=self, selectmode="day")
         self.calendar.pack()
         self.pack_buttons()
-        print(self.main_window.center_frame.selected_habit_id.get())
 
     def pack_buttons(self):
         """
@@ -231,7 +230,7 @@ class DatePicker(PopUpWindow):
         #achtung noch überarbeiten!!!
         try:
             habit = ana.get_current_tracked_habit(
-                habit_id=self.main_window.center_frame.selected_habit_id.get(),
+                habit_id=self.habit_id,
                 habit_list=self.main_window.all_habits
                 )
             habit.completion.mark_completed()
@@ -261,14 +260,11 @@ class DatePicker(PopUpWindow):
         date_str = self.calendar.get_date()
         month, day, year = [int(date_) for date_ in date_str.split("/")]
         year = 2000 + year
-        print(date_str)
         try:
             habit = ana.get_current_tracked_habit(
-                habit_id=self.main_window.center_frame.selected_habit_id.get(),
+                habit_id=self.habit_id,
                 habit_list=self.main_window.all_habits
                 )
-            checked_date=date(year=year,month=month,day=day)
-            print(checked_date)
             habit.completion.mark_completed(checked_date=date(year=year,month=month,day=day))
         except AttributeError as exc:
             self.destroy()
@@ -303,7 +299,7 @@ class PopUpCalendar(PopUpWindow):
             TypeError: Completed dates must be list or None.
         """
     def __init__(self, main_window, completed_dates=None, frequency=1, creation_date = date.today):
-        super().__init__(main_window)
+        super().__init__(main_window=main_window)
 
         if not isinstance(frequency, int):
             raise TypeError("Frequency must be integer.")
