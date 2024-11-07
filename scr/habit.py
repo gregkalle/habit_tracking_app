@@ -36,20 +36,31 @@ class Habit():
     """
     DEFAULT_STORAGE_STRATEGY = SQLiteStorage()
 
-    def __init__(self, name, description, frequency = Completion.DAILY,
-                 completed_dates=None, creation_time = None, habit_id=None):
+    def __init__(self, name, description, habit_id=None, frequency = Completion.DAILY,
+                 completed_dates=None, creation_time = None):
 
         self.completion = Completion(frequency, completed_dates, creation_time)
-        self.name = name or "new habit"
-        self.description = description or "new description"
-        self.habit_id = habit_id
+        name = name or "new habit"
+        description = description or "new description"
+        self.record = {"name": name,
+                  "description": description,
+                  "habit_id": habit_id
+                  }
 
     def __eq__(self, habit):
-        if isinstance(habit,Habit) and habit.name == self.name\
-                                   and habit.description == self.description\
-                                   and habit.habit_id == self.habit_id:
+        if isinstance(habit,Habit) and habit["name"] == self["name"]\
+                                   and habit["description"] == self["description"]\
+                                   and habit["habit_id"] == self["habit_id"]:
             return True
-        return False
+        return NotImplemented
+
+    def __getitem__(self,name):
+        if name in self.completion.record:
+            return self.completion[name]
+        return self.record[name]
+
+    def __setitem__(self, name, value):
+        self.record[name]=value
 
     def save(self):
         """
@@ -110,7 +121,7 @@ class Habit():
             cls.DEFAULT_STORAGE_STRATEGY.delete(habit_id)
         except ValueError as exc:
             raise ValueError("ID is not in database.") from exc
-        
+
     @classmethod
     def change_habit_name_description(cls, habit_id, habit_name=None, habit_description=None):
         """
@@ -131,9 +142,9 @@ class Habit():
         if not habit:
             raise ValueError(f"There is no habit with id {habit_id} in the database.")
         if habit_name:
-            habit.name = habit_name
+            habit["name"] = habit_name
         if habit_description:
-            habit.description = habit_description
+            habit["description"] = habit_description
         return habit
 
     @classmethod
@@ -151,15 +162,10 @@ class Habit():
         #check if habit of type Habit
         if not isinstance(habit,Habit):
             raise TypeError("Object not of type Habit.")
-        
-        return (habit.habit_id,
-                habit.name,
-                habit.description,
-                habit.completion.frequency,
-                ana.get_current_streak(completed_dates=habit.completion.completed_dates,
-                                       frequency=habit.completion.frequency,
-                                       creation_time=habit.completion.creation_time),
-                ana.get_longest_streak(completed_dates=habit.completion.completed_dates,
-                                       frequency=habit.completion.frequency,
-                                       creation_time=habit.completion.creation_time))
-    
+
+        return (habit["habit_id"],
+                habit["name"],
+                habit["description"],
+                habit["frequency"],
+                ana.get_current_streak(habit=habit),
+                ana.get_longest_streak(habit=habit))

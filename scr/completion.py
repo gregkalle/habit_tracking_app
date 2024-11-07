@@ -39,16 +39,20 @@ class Completion:
     def __init__(self, frequency = DAILY, completed_dates = None, creation_time = None):
         if not isinstance(frequency, int) or frequency < Completion.DAILY:
             raise ValueError("Frequency must be a positiv integer.")
-        self.frequency = frequency
-        self.completed_dates = completed_dates
-        if self.completed_dates is None:
-            self.completed_dates=[]
-        self.creation_time = creation_time
+        if completed_dates is None:
+            completed_dates=[]
+        if not isinstance(completed_dates,list):
+            completed_dates = [completed_dates]
         if not creation_time:
-            self.creation_time = datetime.now()
-        for date_ in self.completed_dates:
+            creation_time = datetime.now()
+        for date_ in completed_dates:
             Completion.validate_date(date_)
+        self.record = {"frequency": frequency,
+                  "completed_dates": completed_dates,
+                  "creation_time": creation_time}
 
+    def __getitem__(self, name):
+        return self.record[name]
 
     def mark_completed(self, checked_date=None):
         """
@@ -64,51 +68,11 @@ class Completion:
         Completion.validate_date(checked_date)
         # set the checked date to the next periode
         checked_date = checked_date\
-            - (checked_date-self.creation_time.date())%timedelta(days=self.frequency)
+            - (checked_date-self.record["creation_time"].date())\
+            %timedelta(days=self.record["frequency"])
 
-        if checked_date not in self.completed_dates:
-            self.completed_dates.append(checked_date)
-
-
-    def calculate_streak(self):
-        """
-        Calculate the actuell streak count.
-
-        Returns:
-            int: The number of consecutive periods the habit was fulfilled included today.
-        """
-
-        today = date.today()
-        today = today - (today-self.creation_time.date())%timedelta(days=self.frequency)
-
-        streak = 0
-        while today in self.completed_dates:
-            streak += 1
-            today -= timedelta(days=self.frequency)
-        return streak
-
-    def calculate_longest_streak(self):
-        """
-        Calculate the longest streak count.
-
-        Returns:
-            int: The highest number of consecutive periods the habit was fulfilled.
-        """
-        if not self.completed_dates:
-            return 0
-
-        longest_streak = 1
-        streak = 1
-        self.completed_dates.sort()
-
-        for i in range(1,len(self.completed_dates)):
-            if self.completed_dates[i] ==\
-                  self.completed_dates[i-1] +timedelta(days=self.frequency):
-                streak += 1
-            else:
-                streak = 1
-            longest_streak = max(streak, longest_streak)
-        return longest_streak
+        if checked_date not in self.record["completed_dates"]:
+            self.record["completed_dates"].append(checked_date)
 
     @classmethod
     def validate_date(cls, validation_data):

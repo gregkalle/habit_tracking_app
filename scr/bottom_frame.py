@@ -214,9 +214,9 @@ class BottomFrame(ttk.Frame):
                 if habit is None:
                     raise ValueError("There are no habit insert to show calendar.")
 
-                completed_dates = habit.completion.completed_dates
-                frequency = habit.completion.frequency
-                creation_date = habit.completion.creation_time.date()
+                completed_dates = habit["completed_dates"]
+                frequency = habit["frequency"]
+                creation_date = habit["creation_time"].date()
                 PopUpCalendar(main_window=self.master,completed_dates=completed_dates,
                             frequency=frequency, creation_date=creation_date)
             except AttributeError as exc:

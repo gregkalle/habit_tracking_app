@@ -69,12 +69,12 @@ class SQLiteStorage(StorageStrategy):
         try:
             with sqlite3.connect(self.__data_base) as connect:
                 with closing(connect.cursor()) as cursor:
-                    if habit.habit_id:
+                    if habit["habit_id"]:
                         #Update existing habit data
                         try:
                             cursor.execute("""
                                         UPDATE habit SET name = ?, description = ? WHERE id = ?
-                                        """,(habit.name, habit.description, habit.habit_id))
+                                        """,(habit["name"], habit["description"], habit["habit_id"]))
                         except sqlite3.ProgrammingError as exc:
                             raise TypeError\
                                 ("Habit data has wronge type and is not savable.")from exc
@@ -85,9 +85,9 @@ class SQLiteStorage(StorageStrategy):
                             cursor.execute("""
                                         INSERT INTO habit (name, description, frequency, creation_time) VALUES (?, ?, ?, ?)
                                         """,
-                                        (habit.name, habit.description, habit.completion.frequency,
-                                        habit.completion.creation_time.isoformat()))
-                            habit.habit_id = cursor.lastrowid
+                                        (habit["name"], habit["description"], habit["frequency"],
+                                        habit["creation_time"].isoformat()))
+                            habit["habit_id"] = cursor.lastrowid
                         except sqlite3.ProgrammingError as exc:
                             raise TypeError\
                                 ("Habit data has wronge type and is not savable.") from exc
@@ -95,16 +95,16 @@ class SQLiteStorage(StorageStrategy):
                     #get existing completions
                     cursor.execute("""
                                 SELECT completed_dates FROM tracking WHERE habit_id = ?
-                                """, (habit.habit_id,))
+                                """, (habit["habit_id"],))
                     existing_dates = {row[0] for row in cursor.fetchall()}
 
                     #Insert new completions in the database
-                    for date_value in [d for d in habit.completion.completed_dates
+                    for date_value in [d for d in habit["completed_dates"]
                                     if d not in self.isoformat_to_datetime(existing_dates)\
                                         and isinstance(d, date)]:
                         cursor.execute("""
                                     INSERT INTO tracking (habit_id, completed_dates) VALUES (?, ?)
-                                    """, (habit.habit_id, date_value.isoformat()))
+                                    """, (habit["habit_id"], date_value.isoformat()))
 
                 connect.commit()
         except AttributeError as exc:
