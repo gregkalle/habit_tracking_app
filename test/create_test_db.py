@@ -17,7 +17,7 @@ if os.path.exists(TEST_DB):
 
 Habit.DEFAULT_STORAGE_STRATEGY = SQLiteStorage(TEST_DB)
 
-creation_time = datetime(year=2024,month=9,day=30,hour=8)
+creation_time = datetime(year=2024,month=9,day=30)
 
 habit_data=[]
 walk=[]

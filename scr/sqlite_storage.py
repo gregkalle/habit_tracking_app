@@ -34,7 +34,7 @@ class SQLiteStorage(StorageStrategy):
 
     def __init__(self, data_base = DB_NAME):
         self.__data_base = data_base
-        with sqlite3.connect(self.__data_base) as connect:
+        with closing(sqlite3.connect(self.__data_base)) as connect:
             with closing(connect.cursor()) as cursor:
                 cursor.execute("""
                     CREATE TABLE IF NOT EXISTS habit (
@@ -67,7 +67,7 @@ class SQLiteStorage(StorageStrategy):
             TypeError: Habit data has wronge type and is not savable.
         """
         try:
-            with sqlite3.connect(self.__data_base) as connect:
+            with closing(sqlite3.connect(self.__data_base)) as connect:
                 with closing(connect.cursor()) as cursor:
                     if habit["habit_id"]:
                         #Update existing habit data
@@ -107,6 +107,7 @@ class SQLiteStorage(StorageStrategy):
                                     """, (habit["habit_id"], date_value.isoformat()))
 
                 connect.commit()
+
         except AttributeError as exc:
             raise TypeError("Object is not of type Habit.") from exc
 
@@ -121,7 +122,7 @@ class SQLiteStorage(StorageStrategy):
             habit_data (dict): {"name":, "description":,
                                 "frequency": , "completed_dates": , "habit_id": }
         """
-        with sqlite3.connect(self.__data_base) as connect:
+        with closing(sqlite3.connect(self.__data_base)) as connect:
             with closing(connect.cursor()) as cursor:
                 #fetch habit data
                 cursor.execute("""
@@ -156,7 +157,7 @@ class SQLiteStorage(StorageStrategy):
         """
         if not habit_id in self.get_all_id():
             raise ValueError("ID is not in database.")
-        with sqlite3.connect(self.__data_base) as connect:
+        with closing(sqlite3.connect(self.__data_base)) as connect:
             with closing(connect.cursor()) as cursor:
                 cursor.execute("""
                     DELETE FROM tracking WHERE habit_id = ?
@@ -194,7 +195,7 @@ class SQLiteStorage(StorageStrategy):
         Returns:
             [int]: List of the habit_ids
         """
-        with sqlite3.connect(self.__data_base) as connect:
+        with closing(sqlite3.connect(self.__data_base)) as connect:
             with closing(connect.cursor()) as cursor:
                 cursor.execute("""
                     SELECT id FROM habit
