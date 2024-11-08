@@ -41,7 +41,7 @@ class Habit():
         self.completion = Completion(frequency, completed_dates, creation_time)
         name = name or "new habit"
         description = description or "new description"
-        self.record = {"name": name,
+        self.__record = {"name": name,
                   "description": description,
                   "habit_id": habit_id
                   }
@@ -56,10 +56,10 @@ class Habit():
     def __getitem__(self,name):
         if name in self.completion.record:
             return self.completion[name]
-        return self.record[name]
+        return self.__record[name]
 
     def __setitem__(self, name, value):
-        self.record[name]=value
+        self.__record[name]=value
 
     def save(self):
         """

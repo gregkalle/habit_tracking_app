@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import pytest
 from freezegun import freeze_time
 from scr.habit import Habit
@@ -18,14 +18,12 @@ class TestHabits:
         assert Habit(name="habit 2",description="habit 1",habit_id=1) != Habit(name="habit 2",description="habit 2",habit_id=1)
         assert Habit(name="habit 2",description="habit 2",habit_id=2) != Habit(name="habit 2",description="habit 2",habit_id=1)
 
-    def test__getitem__(self,create_habits):
+    @pytest.mark.parametrize("prop,value",[("name","Go for a walk"),("description","Walking at least 1km a day."),
+                                               ("habit_id",1),("frequency",1),("creation_time",datetime(year=2024,day=30,month=9)),
+                                               ("completed_dates",[])])
+    def test__getitem__(self,create_habits,prop,value):
         habit = create_habits[0]
-        assert habit["name"] == "Go for a walk"
-        assert habit["description"] == "Walking at least 1km a day."
-        assert habit["habit_id"] == 1
-        assert habit["frequency"] == 1
-        assert habit["creation_time"]
-        assert not habit["completed_dates"]
+        assert habit[prop] == value
 
     def test__setitem__(self):
         habit = Habit(name="name",description="description")
