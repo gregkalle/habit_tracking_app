@@ -23,34 +23,48 @@ class Completion:
     Attributes:
         WEEKLY (int): The frequency for a weekly habit. Is set to 7.
         Daily (int): The frequency for a daily habit. Is set to 1.
-        frequency (int):The periodicity of the habit. Default is DAILY.
-        completed_dates (list): List of the completed dates. Default is None.
-        creation_time (datetime.datetime): The time when the habit is created.
-                                           Default is datetime.datetime.now().
+        self["frequency"] (int): The frequency of the complition
+        self["completed_dates"] (list): The list of the completed dates.
+        self["creation_time"] (datetime): The datetime when the completion is created.
 
     Raises:
         ValueError: Frequency must be a positiv integer.
+        TypeError: Creation time must be of type datetime.datetime.
+        TypeError: The elements of completed dates must be of type datetime.date.
     """
     WEEKLY = 7
-    """ WEEKLY is set to 7"""
     DAILY = 1
-    """DAILY is set to 1"""
 
     def __init__(self, frequency = DAILY, completed_dates = None, creation_time = None):
+        #checkes if the frequency a positiv integer
         if not isinstance(frequency, int) or frequency < Completion.DAILY:
             raise ValueError("Frequency must be a positiv integer.")
+
+        #set default completed_dates
         if completed_dates is None:
             completed_dates=[]
+
+        #checks if completed dates is list, and if not creats a list
         if not isinstance(completed_dates,list):
             completed_dates = [completed_dates]
+
+        #sets creation time to now if not seted and check if o type datetime.
         if not creation_time:
             creation_time = datetime.now()
-        for date_ in completed_dates:
-            Completion.validate_date(date_)
+        if not isinstance(creation_time,datetime):
+            raise TypeError("Creation time must be of type datetime.datetime.")
+
+        #checks if all elements are the type datetime.date and raises error if not.
+        for element in completed_dates:
+            if not isinstance(element,date) or isinstance(element,datetime):
+                raise TypeError("The elements of completed dates must be of type datetime.date.")
+
+        #set the properties of the class to a dictonary
         self.record = {"frequency": frequency,
                   "completed_dates": completed_dates,
                   "creation_time": creation_time}
 
+    #set the __getitem__ function that the properties are callable with self["property"]
     def __getitem__(self, name):
         return self.record[name]
 
@@ -61,29 +75,21 @@ class Completion:
         Args:
             checked_date (datetime.date): The date of the day on which the habit is been completed.
                                           Default is datetime.date.today().
+        Raise:
+            TypeError: The checked date must be of type datetime.date.
         """
+        #set default cacked date to the date today
         if checked_date is None:
             checked_date = date.today()
 
-        Completion.validate_date(checked_date)
-        # set the checked date to the next periode
+        #checks if date is of type datetime.date and raises error if not.
+        if not isinstance(checked_date,date) or isinstance(checked_date,datetime):
+            raise TypeError("The checked date must be of type datetime.date.")
+
+        # set the checked date to the start date of the periode
         checked_date = checked_date\
             - (checked_date-self.record["creation_time"].date())\
             %timedelta(days=self.record["frequency"])
 
         if checked_date not in self.record["completed_dates"]:
             self.record["completed_dates"].append(checked_date)
-
-    @classmethod
-    def validate_date(cls, validation_data):
-        """
-        Validates the type of the data and raises an error if not of type datetime.date.
-
-        Args:
-            validation_data (datetime.date): The data which should be validated.
-        
-        Raises:
-            TypeError: The data must be of type datetime.date.
-        """
-        if not isinstance(validation_data,date) or isinstance(validation_data,datetime):
-            raise TypeError("The data must be of type datetime.date.")

@@ -6,6 +6,11 @@ from scr.completion import Completion
 def test_completion_error():
     with pytest.raises(ValueError,match="Frequency must be a positiv integer."):
         Completion(frequency=-1)
+    with pytest.raises(TypeError,match="Creation time must be of type datetime.datetime."):
+        Completion(creation_time=date.today())
+    with pytest.raises(TypeError,match="The elements of completed dates must be of type datetime.date."):
+        Completion(completed_dates=datetime.now())
+        Completion(completed_dates="Not type date")
 
 @pytest.mark.parametrize("frequency,creation_time,completed_dates",[(1,datetime.now(),[date.today()])])
 def test__getitem__(frequency,creation_time,completed_dates):
@@ -29,9 +34,3 @@ def test_mark_completed(checked_date,added_date,completed_dates,frequency,length
     completion.mark_completed(checked_date=checked_date)
     assert len(completion.record["completed_dates"])==length
     assert added_date in completion.record["completed_dates"]
-
-def test_validate_date():
-    assert Completion.validate_date(date.today()) is None
-    with pytest.raises(TypeError,match="The data must be of type datetime.date."):
-        Completion.validate_date(datetime.today())
-        Completion.validate_date(object())
