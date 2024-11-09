@@ -44,7 +44,6 @@ class TestHabits:
         for habit in habits:
             assert habit in create_habits
 
-    @pytest.mark.order(-2)
     def test_save_and_delete(self):
         habit = Habit(name=None,description=None)
         habit.save()
@@ -89,7 +88,6 @@ class TestHabits:
         with pytest.raises(TypeError,match="Object not of type Habit."):
             Habit.habit_data(habit="No habit object.")
 
-    @pytest.mark.order(-1)
     def test_save_with_marked_date(self):
         habit = Habit(name="name",description="description",frequency=1)
         habit.save()
