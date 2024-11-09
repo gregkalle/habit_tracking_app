@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from scr.habit import Habit
 from scr.sqlite_storage import SQLiteStorage
 
+
 TEST_DB="test/test_data.db"
 
 @pytest.fixture(scope="session", autouse=True)
@@ -13,9 +14,9 @@ def set_up():
     #remove test database if exists.
     if os.path.exists(TEST_DB):
         os.remove(TEST_DB)
-    
-    #Set DEFAULT_STORAGE_STRATEGY
-    Habit.DEFAULT_STORAGE_STRATEGY = SQLiteStorage(TEST_DB)
+
+    #Set database
+    Habit.DEFAULT_STORAGE_STRATEGY = SQLiteStorage(data_base=TEST_DB)
 
     #create habit data
     habit_data = create_habit_data()
@@ -37,6 +38,9 @@ def set_up():
 @pytest.fixture
 @freeze_time("2024-09-30")
 def create_habits():
+    """
+    Creates habits with which the habit tracker app is tested.
+    """
     test_habit1=Habit(name="Go for a walk",description="Walking at least 1km a day.",habit_id=1,frequency=1,)
     test_habit2=Habit(name="Clean the house", description="Clean the house once a week.",habit_id=2,frequency=7)
     test_habit3=Habit(name="Push ups", description="Excercise 10 push-ups every day.",habit_id=3,frequency=1)
@@ -47,8 +51,13 @@ def create_habits():
 
 
 def create_habit_data():
+    """
+    Creats the habit_data which is stored in the test database.
+    """
     creation_time = datetime(year=2024,month=9,day=30)
     habit_data=[]
+
+    #set completed dates
     walk=[]
     for i in range(28):
         walk.append(creation_time.date() + i* timedelta(days=1))
@@ -65,6 +74,8 @@ def create_habit_data():
     swim=[]
     for i in [0,21]:
         swim.append(creation_time.date() + i* timedelta(days=1))
+    
+    #set the habit data.
     habit_data.append({"name": "Go for a walk", "description": "Walking at least 1km a day.",
             "frequency": 1, "completed_dates": walk,
             "creation_time": creation_time,})

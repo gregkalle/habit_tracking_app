@@ -2,14 +2,9 @@ from datetime import date, datetime
 import pytest
 from freezegun import freeze_time
 from scr.habit import Habit
-from scr.sqlite_storage import SQLiteStorage
 
 
 class TestHabits:
-
-    def setup_method(self):
-        #set database to test database
-        Habit.DEFAULT_STORAGE_STRATEGY = SQLiteStorage("test/test_data.db")
 
     def test__eq__(self):
         assert Habit(name="habit 1",description="habit 1") == Habit(name="habit 1",description="habit 1")
@@ -31,6 +26,12 @@ class TestHabits:
         habit["description"] = "new description"
         assert habit["name"] == "new name"
         assert habit["description"] == "new description"
+
+    def test__setitem__errors(self):
+        habit = Habit(name="name",description="description")
+        name = "frequency"
+        with pytest.raises(KeyError,match=f"Can not set Habit\\[{name}\\]."):
+            habit[name] = "test_value"
 
     @pytest.mark.parametrize("habit_id",[[1,2,3,4,5]])
     def test_load(self, create_habits, habit_id):

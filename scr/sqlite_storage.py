@@ -25,6 +25,8 @@ class SQLiteStorage(StorageStrategy):
             tracking (ID INTEGER PRIMARY KEY, habit_id INTEGER, completed_dates TEXT,
              FOREIGN KEY(habit_id) REFERENCES habit (id))
     
+        Args:
+            data_base (str): The name of the used database. Default is DB_NAME
         Attributes:
             DB_NAME = "scr/habits.db"
     """

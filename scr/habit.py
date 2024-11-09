@@ -59,6 +59,8 @@ class Habit():
         return self.__record[name]
 
     def __setitem__(self, name, value):
+        if name in self.completion.record:
+            raise KeyError(f"Can not set Habit[{name}].")
         self.__record[name]=value
 
     def save(self):
