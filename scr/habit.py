@@ -28,9 +28,9 @@ class Habit():
     Attributes:
         DEFAULT_STORAGE_STRATEGY (SQLiteStorge): The strategy which saves
                                                 and loads habits to the database
-        name (str): The name of the habit.
-        description (str): The description of the habit.
-        habit_id (int): The id with which is the habit stored in the database.
+        self["name"] (str): The name of the habit.
+        self["description"] (str): The description of the habit.
+        self["habit_id"] (int): The id with which is the habit stored in the database.
         completion (Completion): Class which processes the habit data.  
     """
     DEFAULT_STORAGE_STRATEGY = SQLiteStorage()
@@ -46,6 +46,7 @@ class Habit():
                   "habit_id": habit_id
                   }
 
+    #define if two habits are equal.
     def __eq__(self, habit):
         if isinstance(habit,Habit) and habit["name"] == self["name"]\
                                    and habit["description"] == self["description"]\
@@ -53,12 +54,16 @@ class Habit():
             return True
         return NotImplemented
 
+    #set the __getitem__ function that the properties are callable with self["property"]
     def __getitem__(self,name):
+        #gives the properties of self.completion
         if name in self.completion.record:
             return self.completion[name]
         return self.__record[name]
 
+    #make the properties of the habit setable
     def __setitem__(self, name, value):
+        #prevents setting the properties of self.completion
         if name in self.completion.record:
             raise KeyError(f"Can not set Habit[{name}].")
         self.__record[name]=value
@@ -87,11 +92,13 @@ class Habit():
             Habit: The habit with the habit_id if existing.
         """
 
+        #load data from database
         data = cls.DEFAULT_STORAGE_STRATEGY.load(habit_id)
 
         if not data:
             return None
 
+        #create a habit from data and return it.
         return Habit(frequency=data["frequency"], completed_dates=data["completed_dates"],
                      name=data["name"], description=data["description"],
                      creation_time=data["creation_time"], habit_id=data["habit_id"])
@@ -142,8 +149,10 @@ class Habit():
         habit = Habit.load(habit_id=habit_id)
         if not habit:
             raise ValueError(f"There is no habit with id {habit_id} in the database.")
+        #set new habit name
         if habit_name:
             habit["name"] = habit_name
+        #set new habit name
         if habit_description:
             habit["description"] = habit_description
         return habit

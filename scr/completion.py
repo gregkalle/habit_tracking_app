@@ -78,7 +78,7 @@ class Completion:
         Raise:
             TypeError: The checked date must be of type datetime.date.
         """
-        #set default cacked date to the date today
+        #set default cecked date to the date today
         if checked_date is None:
             checked_date = date.today()
 
@@ -91,5 +91,6 @@ class Completion:
             - (checked_date-self.record["creation_time"].date())\
             %timedelta(days=self.record["frequency"])
 
+        #append completed_dates only if checked_date is a new date
         if checked_date not in self.record["completed_dates"]:
             self.record["completed_dates"].append(checked_date)

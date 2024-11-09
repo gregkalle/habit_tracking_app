@@ -34,3 +34,8 @@ def test_mark_completed(checked_date,added_date,completed_dates,frequency,length
     completion.mark_completed(checked_date=checked_date)
     assert len(completion.record["completed_dates"])==length
     assert added_date in completion.record["completed_dates"]
+
+def test_mark_completed_error():
+    completion = Completion()
+    with pytest.raises(TypeError,match="The checked date must be of type datetime.date."):
+        completion.mark_completed("No date type.")
