@@ -113,10 +113,8 @@ class App(tk.Tk):
         title = ttk.Label(top_frame, text="Habit Tracking App")
         title.pack(side="top")
         #create and pack label with the value of the longest streak count.
-        label = ttk.Label(top_frame,text=f"""
-                          Overall longest streak is
-                          {ana.get_longest_streak_of_all(habit_list=self.all_habits)}
-                        """)
+        label = ttk.Label(top_frame,text="Overall longest streak is "\
+                          f"{ana.get_longest_streak_of_all(habit_list=self.all_habits)}.")
         label.pack(side="top")
         return top_frame
 
