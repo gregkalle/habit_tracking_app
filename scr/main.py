@@ -23,9 +23,11 @@ class App(tk.Tk):
     
     Attributes:
         USABLE_FREQUENCIES (dict): Implemented frequency keys:["DAILY"]=1 ,["WEEKLY"]=7
-        SELECTABLE_FREQUENCIES (tuple): Selectable frequencies: ("Daily", "Weekly", "All")
+        SELECTABLE_FREQUENCIES (tuple): Selectable frequencies: ("Daily", "Weekly", "Selected", "All")
+        HABIT_LIST_TITLES (tuple): ("selected", "habit name", "description", "frequency",
+                         "current streak", "longest streak")
         
-        analytics (Analytics): An instance of the Analytics class for managing habit data.
+        all_habits (list): A of all habits which are saved in the database.
         child_windows (list): A list to keep track of child windows.
         top_frame (ttk.Frame): The top frame of the application.
         bottom_frame (BottomFrame): The bottom frame of the application.
@@ -33,8 +35,8 @@ class App(tk.Tk):
     """
     USABLE_FREQUENCIES = {"Daily" : 1, "Weekly" : 7}
     SELECTABLE_FREQUENCIES = ("Daily", "Weekly", "Selected", "All")
-    HABIT_LIST_TITLES = ["selected", "habit name", "description", "frequency",
-                         "current streak", "longest streak"]
+    HABIT_LIST_TITLES = ("selected", "habit name", "description", "frequency",
+                         "current streak", "longest streak")
 
 
     def __init__(self):
@@ -43,14 +45,17 @@ class App(tk.Tk):
         self.all_habits = Habit.load_all()
         self.child_windows = []
 
+        #set the geometry and the title of the main window
         self.geometry("900x450")
         self.title("Habit Tracking App")
 
         self.top_frame = self.get_top_frame()
         self.top_frame.pack(side="top")
+
         self.center_frame = CenterFrame(self,column_names=self.HABIT_LIST_TITLES,
                                         habit_list=self.all_habits)
         self.center_frame.pack(side="top", fill="both")
+        
         self.bottom_frame = BottomFrame(self)
         self.bottom_frame.pack(side="bottom")
 
@@ -64,6 +69,7 @@ class App(tk.Tk):
         """
         try:
             for child in self.child_windows:
+                #call the destroy methode in the child window
                 child.destroy()
         except AttributeError as exc:
             raise AttributeError("Child window has no Attribute destroy.") from exc
@@ -77,6 +83,8 @@ class App(tk.Tk):
             child (PopUpWindow): The child window to add.
         """
         self.child_windows.append(child)
+
+        #disables button that there is only one child window at once.
         for button in self.bottom_frame.buttons:
             button.state(["disabled"])
 
@@ -100,8 +108,10 @@ class App(tk.Tk):
             ttk.Frame: The top frame containing the application title.
         """
         top_frame = ttk.Frame(self)
+        #creates and pack title label
         title = ttk.Label(top_frame, text="Habit Tracking App")
         title.pack(side="top")
+        #create and pack label with the value of the longest streak count.
         label = ttk.Label(top_frame,text=f"Overall longest streak is {ana.get_longest_streak_of_all(habit_list=self.all_habits)}")
         label.pack(side="top")
         return top_frame
