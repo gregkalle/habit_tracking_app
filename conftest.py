@@ -5,18 +5,15 @@ from freezegun import freeze_time
 from scr.habit import Habit
 from scr.sqlite_storage import SQLiteStorage
 
-
-TEST_DB="test/test_data.db"
-
 @pytest.fixture(scope="session", autouse=True)
 def set_up():
     
     #remove test database if exists.
-    if os.path.exists(TEST_DB):
-        os.remove(TEST_DB)
+    if os.path.exists("test/test_data.db"):
+        os.remove("test/test_data.db")
 
     #Set database
-    Habit.DEFAULT_STORAGE_STRATEGY = SQLiteStorage(data_base=TEST_DB)
+    Habit.DEFAULT_STORAGE_STRATEGY = SQLiteStorage(data_base="test/test_data.db")
 
     #create habit data
     habit_data = create_habit_data()
@@ -30,8 +27,8 @@ def set_up():
     yield
 
     #remove test database
-    if os.path.exists(TEST_DB):
-        os.remove(TEST_DB)
+    if os.path.exists("test/test_data.db"):
+        os.remove("test/test_data.db")
 
 
 
@@ -48,6 +45,10 @@ def create_habits():
     test_habit5=Habit(name="Swimming", description="Swim 1km in the local swimming pool.",habit_id=5,frequency=7)
     return [test_habit1,test_habit2,test_habit3,test_habit4,test_habit5]
 
+
+@pytest.fixture
+def data_base_path():
+    return "test/test_data.db"
 
 
 def create_habit_data():
