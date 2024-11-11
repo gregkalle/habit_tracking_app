@@ -34,8 +34,8 @@ To show a calendar with the createn date and all marked dates of the habit, clic
 - First date of the period in which the habit was fulfilled is green. If the frequency is one, it is the date on which the habit was fulfilled.
 - The other dates of the period in which the habit was fulfilled are light green. They are only shown if the habit frequency is not daily (1).
 
-### Select Periodicity
-To show the daily, weekly or all habits in the app, select the periodicity with the "select periodicity"-button.
+### Show Habits
+To show the daily, weekly, all selcted or all habits in the app, select the shown habits with the "show habits"-button.
 
 ## License
 
