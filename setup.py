@@ -29,6 +29,6 @@ setup(
     python_requires=">=3.7",
     entry_points="""
         [console_scripts]
-        habits=main:main
+        habits=scr.main:main
     """,
 )
