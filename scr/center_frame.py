@@ -34,12 +34,17 @@ class CenterFrame(ttk.Frame):
         self.column_names = column_names
         if self.column_names is None:
             self.column_names = []
+
         self.habit_list = habit_list
         if self.habit_list is None:
             self.habit_list = []
+
+        #list of the selected habit ids.
         self.selected_habit_id = []
-        self.buttons=[]
+
+        #set the titles of the columns
         self.set_column_names(column_names=self.column_names)
+        #pack the data of the habits in the table of the center frame
         self.pack_all_habits(habit_list=self.habit_list)
         self.columnconfigure(0, minsize=10)
 
@@ -82,6 +87,7 @@ class CenterFrame(ttk.Frame):
     def pack_habit(self, habit_data, row):
         """
         Packing the data of one habit in the next empty row of the data table.
+        Adding a check box in the first column of the table.
         
         Args:
             habit_data (dict): The data of the habit that is added to the table.
@@ -96,6 +102,7 @@ class CenterFrame(ttk.Frame):
         if not isinstance(row,int):
             raise TypeError("row is no integer.")
         for i,data in enumerate(habit_data):
+            #insert checkbutton in the first column of the table
             if i==0:
                 variable = tk.IntVar()
                 button = ttk.Checkbutton(self,onvalue=data,offvalue=None,
@@ -104,6 +111,7 @@ class CenterFrame(ttk.Frame):
                 button.grid(column=i+CenterFrame.COLUMN_OFFSET,
                           row=row,ipadx=10)
             else:
+                #insert the data in the other columns of the table
                 ttk.Label(self, text=str(data),anchor=tk.CENTER)\
                     .grid(column=i+CenterFrame.COLUMN_OFFSET,
                           row=row,ipadx=30,ipady=10)
