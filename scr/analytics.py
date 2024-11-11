@@ -114,7 +114,7 @@ def get_current_streak(habit)->int:
         completed_dates=habit["completed_dates"]
     except (KeyError,TypeError) as exc:
         raise TypeError("Habit not of type Habit.") from exc
-    
+
     #define today as the date from today
     today = date.today()
     try:
@@ -122,12 +122,12 @@ def get_current_streak(habit)->int:
         creation_day = creation_time.date()
     except AttributeError as exc:
         raise TypeError("Creation time not of type datetime.datetime.") from exc
-    
+
     #set today to the first day of the actuell period
     today = today - (today-creation_day)%timedelta(days=frequency)
     #initialise the streak count
     streak = 0
-    
+
     try:
         while today in completed_dates:
             #count today to the streak
@@ -166,7 +166,7 @@ def get_longest_streak(habit)->int:
     streak, longest_streak = (0,0)
 
     #define today as the date from today
-    today = date.today()    
+    today = date.today()
     try:
         #change creation_time of habit to date.
         creation_day = creation_time.date()
@@ -208,7 +208,7 @@ def get_longest_streak_of_all(habit_list:list)->int:
     """
     if not isinstance(habit_list,list):
         raise TypeError("Habit list is not a list.")
-    
+
     over_all_longest_streak = 0
     for habit in habit_list:
         try:

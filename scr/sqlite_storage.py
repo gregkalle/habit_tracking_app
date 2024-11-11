@@ -76,7 +76,9 @@ class SQLiteStorage(StorageStrategy):
                         try:
                             cursor.execute("""
                                         UPDATE habit SET name = ?, description = ? WHERE id = ?
-                                        """,(habit["name"], habit["description"], habit["habit_id"]))
+                                        """,(habit["name"],
+                                             habit["description"],
+                                             habit["habit_id"]))
                         except sqlite3.ProgrammingError as exc:
                             raise TypeError\
                                 ("Habit data has wronge type and is not savable.")from exc

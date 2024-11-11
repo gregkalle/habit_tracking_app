@@ -23,7 +23,8 @@ class App(tk.Tk):
     
     Attributes:
         USABLE_FREQUENCIES (dict): Implemented frequency keys:["DAILY"]=1 ,["WEEKLY"]=7
-        SELECTABLE_FREQUENCIES (tuple): Selectable frequencies: ("Daily", "Weekly", "Selected", "All")
+        SELECTABLE_FREQUENCIES (tuple): Selectable frequencies:
+                                    ("Daily", "Weekly", "Selected", "All")
         HABIT_LIST_TITLES (tuple): ("selected", "habit name", "description", "frequency",
                          "current streak", "longest streak")
         
@@ -55,7 +56,7 @@ class App(tk.Tk):
         self.center_frame = CenterFrame(self,column_names=self.HABIT_LIST_TITLES,
                                         habit_list=self.all_habits)
         self.center_frame.pack(side="top", fill="both")
-        
+
         self.bottom_frame = BottomFrame(self)
         self.bottom_frame.pack(side="bottom")
 
@@ -112,7 +113,10 @@ class App(tk.Tk):
         title = ttk.Label(top_frame, text="Habit Tracking App")
         title.pack(side="top")
         #create and pack label with the value of the longest streak count.
-        label = ttk.Label(top_frame,text=f"Overall longest streak is {ana.get_longest_streak_of_all(habit_list=self.all_habits)}")
+        label = ttk.Label(top_frame,text=f"""
+                          Overall longest streak is
+                          {ana.get_longest_streak_of_all(habit_list=self.all_habits)}
+                        """)
         label.pack(side="top")
         return top_frame
 

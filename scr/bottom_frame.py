@@ -31,7 +31,7 @@ class BottomFrame(ttk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
-
+        #define the name and function of the buttons in the buttom_frame
         self.__buttons_def = {"check date" : self.click_check_date,
                         "new habit" : self.click_new_habit,
                         "change habit" : self.click_change_habit,
@@ -42,19 +42,22 @@ class BottomFrame(ttk.Frame):
         self.selected_frequency = tk.StringVar()
 
         self.buttons = []
+        #create and pack buttons
         for button_name, button_function in self.__buttons_def.items():
             button = ttk.Button(master=self,text=button_name,command=button_function,padding=10)
             button.pack(side="left")
+            #save buttons in list that buttons can be seted disabled and enabled
             self.buttons.append(button)
 
         try:
+            #create and set the menubutton to select frequencies and selected habits.
             self.get_menu_button(frame=self,title="show habits",
                                 item_selection=self.master.SELECTABLE_FREQUENCIES,
                                 selected_item=self.selected_frequency).pack(side="left")
         except AttributeError as exc:
             raise AttributeError("No selectable frequencies attribute in master.") from exc
 
-
+        #trace the selected frequency to call frequency selected
         self.selected_frequency.trace_add("write",self.frequency_selected)
 
 
@@ -66,7 +69,7 @@ class BottomFrame(ttk.Frame):
             frame (ttk.frame): The parent frame of the menu button.
             title (str): The title of the button.
             item_selection (tuple): The items of the menubutton.
-            selected_item (tk.StringVar): The variable witch saves the selected
+            selected_item (tk.StringVar): The variable which saves the selected
                                           item of the menu button.
 
         Returns:
@@ -76,9 +79,11 @@ class BottomFrame(ttk.Frame):
             TypeError: Item selection is not iterable.
             
         """
+        #create the menubutton
         menu_button = ttk.Menubutton(frame, text=title)
         menu = tk.Menu(menu_button)
         try:
+            #create the radiobuttons of the menubutton
             for item in item_selection:
                 menu.add_radiobutton(
                     label=item,
@@ -94,27 +99,33 @@ class BottomFrame(ttk.Frame):
         """
         Takes action when the check dates button is clicked.
 
-        If no habit is selected, it shows an input error message.
+        If no habit is or more then one habit are selected, it shows an input error message.
         Else it creates a new date picker window.
 
         Raises:
-            AttributeError: Selected habit id does not exist or has not Attribute get().
+            AttributeError: Selected habit id does not exist or has no Attribute get().
         """
         try:
-            value = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
+            #saves the values of the selected_habit_id to a list.
+            #x.get() is False if x not selected.
+            values = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
-                                 or has not Attribute get().""") from exc
-        value = [v for v in value if v]
-        if len(value) == 1:
+                                 or has no Attribute get().""") from exc
+        #shortens values only to the selected values.
+        values = [v for v in values if v]
+
+        #shows datepicker only if one habit is selected
+        if len(values) == 1:
             try:
-                DatePicker(main_window=self.master, habit_id=value[0])
+                DatePicker(main_window=self.master, habit_id=values[0])
             except AttributeError as exc:
                 raise AttributeError("""Selected habit id does not exist
-                                        or has not Attribute get().""") from exc
+                                        or has no Attribute get().""") from exc
         else:
+            #shows input error message
             self.show_no_habit_selected()
-            
+
 
     def click_new_habit(self):
         """
@@ -128,101 +139,123 @@ class BottomFrame(ttk.Frame):
         """
         Takes action when the change habit button is clicked.
 
-        If no habit is selected, it shows an input error message.
+        If no habit is or more then one habit are selected, it shows an input error message.
         Else it creates a new entry window to change the name
         or the description of an existing habit.
 
         Raises:
-            AttributeError: Selected habit id does not exist or has not Attribute get().
+            AttributeError: Selected habit id does not exist or has no Attribute get().
         """
         try:
-            value = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
+            #saves the values of the selected_habit_id to a list.
+            #x.get() is False if x not selected.
+            values = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
-                                 or has not Attribute get().""") from exc
-        value = [v for v in value if v]
-        if len(value) == 1:
+                                 or has no Attribute get().""") from exc
+        #shortens values only to the selected values.
+        values = [v for v in values if v]
+        #shows entry window only if one habit is selected
+        if len(values) == 1:
             try:
-                EntryPopUp(main_window=self.master,habit_id=value[0],behave=EntryPopUp.BEHAVE_CHANGE_HABIT)                   
+                EntryPopUp(main_window=self.master,habit_id=values[0],
+                           behave=EntryPopUp.BEHAVE_CHANGE_HABIT)
             except AttributeError as exc:
                 raise AttributeError("""Selected habit id does not exist
-                                    or has not Attribute get().""") from exc
+                                    or has no Attribute get().""") from exc
         else:
+            #shows input error message
             self.show_no_habit_selected()
 
     def click_delete_habit(self):
         """
         Takes action when the delete habit button is clicked.
 
-        If no habit is selected, it shows an input error message.
+        If no habit is or more then one habit are selected, it shows an input error message.
         Else it shows a ask-ok-cancel message. If this message returns okay,
         the selected habit is deleted from the database and the center frame
         will be reloaded.
 
         Raises:
-            AttributeError: Selected habit id does not exist or has not Attribute get().
+            AttributeError: Selected habit id does not exist or has no Attribute get().
             AttributeError: No attribute analytics in master.
             AttributeError: No attribute reload center frame in master.
         """
-        
+
         try:
-            value = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
+            #saves the values of the selected_habit_id to a list.
+            #x.get() is False if x not selected.
+            values = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
-                                 or has not Attribute get().""") from exc
-        value = [v for v in value if v]
-        if len(value) == 1:
+                                 or has no Attribute get().""") from exc
+
+        #shortens values only to the selected values.
+        values = [v for v in values if v]
+        #shows ok/cancle message only if one habit is selected
+        if len(values) == 1:
             message = mb.askokcancel(title="Delete",
                                     message=f"Do you want to delete the selected habit with the id\
-                                    {value[0]}?"
+                                    {values[0]}?"
                                     )
             if message:
-                Habit.delete(habit_id=value[0])
+                #if ok, the habit will be deleted
+                Habit.delete(habit_id=values[0])
                 try:
+                    #reload all habits
                     self.master.all_habits = Habit.load_all()
                 except AttributeError as exc:
                     raise AttributeError("No attribute analytics in master.") from exc
                 try:
+                    #reload the center frame
                     self.master.reload_center_frame(self.master.all_habits)
                 except AttributeError as exc:
                     raise AttributeError("No attribute reload center frame in master.") from exc
         else:
+            #shows input error message
             self.show_no_habit_selected()
-           
 
     def click_calendar(self):
         """
         Takes action when the calendar button is clicked.
 
-        If no habit is selected, it shows an input error message.
+        If no habit is or more then one habit are selected, it shows an input error message.
         Else it create a new pop-up-calendar to show the dates when the habit is completed.
 
         Raises:
-            AttributeError: Selected habit id does not exist or has not Attribute get().
-            ValueError: There are no Habit object insert to show calendar.
+            AttributeError: Selected habit id does not exist or has no Attribute get().
+            ValueError: There is no Habit object insert to show calendar.
         """
         try:
-            value = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
+            #saves the values of the selected_habit_id to a list.
+            #x.get() is False if x not selected.
+            values = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
         except AttributeError as exc:
             raise AttributeError("""Selected habit id does not exist
-                                 or has not Attribute get().""") from exc
-        value = [v for v in value if v]
-        if len(value) == 1:
+                                 or has no Attribute get().""") from exc
+
+        #shortens values only to the selected values.
+        values = [v for v in values if v]
+        #shows ok/cancle message only if one habit is selected
+        if len(values) == 1:
             try:
-                habit_id = value[0]
-                habit = ana.get_current_tracked_habit(habit_list=self.master.all_habits,habit_id=habit_id)
+                habit_id = values[0]
+                habit = ana.get_current_tracked_habit(habit_list=self.master.all_habits,
+                                                      habit_id=habit_id)
                 if habit is None:
-                    raise ValueError("There are no habit insert to show calendar.")
+                    raise ValueError("There is no habit insert to show calendar.")
 
                 completed_dates = habit["completed_dates"]
                 frequency = habit["frequency"]
                 creation_date = habit["creation_time"].date()
+                #creates a calendar pop up window
                 PopUpCalendar(main_window=self.master,completed_dates=completed_dates,
                             frequency=frequency, creation_date=creation_date)
             except AttributeError as exc:
                 raise AttributeError("""Selected habit id does not exist
-                                    or has not Attribute get().""") from exc
+                                    or has no Attribute get().""") from exc
         else:
+            #shows input error message
             self.show_no_habit_selected()
 
     def frequency_selected(self,*args):
@@ -230,7 +263,7 @@ class BottomFrame(ttk.Frame):
         Takes action when a frequency is selected.
 
         Execute the reload_center_frame methode in the master
-        frame with the habits of the right frequency
+        frame with the habits of the right frequency or selected habits
 
         Raises:
             AttributeError: The is no attribute USABLE_FREQUENCIES in master.
@@ -248,16 +281,23 @@ class BottomFrame(ttk.Frame):
                         self.master.USABLE_FREQUENCIES[frequency_name])
                 except AttributeError() as exc:
                     raise AttributeError("The is no attribute analytics in master.") from exc
-
+            #SELECTABLE_FREQUENCIES[2] = "Selected"
             elif frequency_name == self.master.SELECTABLE_FREQUENCIES[2]:
+                #get all selected frequencies
                 try:
-                    value = list(map(lambda x: x.get(), self.master.center_frame.selected_habit_id))
+                    #saves the values of the selected_habit_id to a list.
+                    #x.get() is False if x not selected.
+                    values = list(map(lambda x: x.get(),
+                                      self.master.center_frame.selected_habit_id))
                 except AttributeError as exc:
                     raise AttributeError("""Selected habit id does not exist
                                         or has not Attribute get().""") from exc
-                value = [v for v in value if v]
+                #shortens values only to the selected values.
+                values = [v for v in values if v]
                 try:
-                    habit_list = ana.get_all_current_tracked_habits(habit_list=self.master.all_habits,id_list=value)
+                    #get all current tracked habits in habit_list
+                    habit_list = ana.get_all_current_tracked_habits(\
+                        habit_list=self.master.all_habits,id_list=values)
                 except AttributeError() as exc:
                     raise AttributeError("The is no attribute analytics in master.") from exc
             else:
@@ -267,7 +307,7 @@ class BottomFrame(ttk.Frame):
                 except AttributeError() as exc:
                     raise AttributeError("Tere is no attribute analytics in master.")from exc
             try:
-                #Reload the center frame to show selected habit in app
+                #Reload the center frame to show selected habits in app
                 self.master.reload_center_frame(habit_list)
             except AttributeError() as exc:
                 raise AttributeError("The is no attribute reload center frame in master") from exc
@@ -278,7 +318,7 @@ class BottomFrame(ttk.Frame):
 
     def show_no_habit_selected(self):
         """
-        The error message which will be shown when no habit is selected.
+        The error message which will be shown when no habit is or more than one habit are selected.
         """
         message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
                             message="No or more than one habit selected."
