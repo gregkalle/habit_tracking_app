@@ -71,12 +71,14 @@ class Completion:
     def mark_completed(self, checked_date=None):
         """
         The habit is been completed today or at a special date.
+        Works only if date between creation date and today.
 
         Args:
             checked_date (datetime.date): The date of the day on which the habit is been completed.
                                           Default is datetime.date.today().
         Raise:
             TypeError: The checked date must be of type datetime.date.
+            ValueError: Checked date is out of checkable intervall.
         """
         #set default cecked date to the date today
         if checked_date is None:
@@ -85,6 +87,11 @@ class Completion:
         #checks if date is of type datetime.date and raises error if not.
         if not isinstance(checked_date,date) or isinstance(checked_date,datetime):
             raise TypeError("The checked date must be of type datetime.date.")
+        
+        #if checked date before creation time, no date will be marked completed.
+        if checked_date < self.record["creation_time"].date() or\
+           checked_date > date.today():
+            raise ValueError("Checked date is out of checkable intervall.")
 
         # set the checked date to the start date of the periode
         checked_date = checked_date\

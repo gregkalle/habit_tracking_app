@@ -28,14 +28,18 @@ def test__getitem__(frequency,creation_time,completed_dates):
             (date(day=14,month=10,year=2024),date(day=14,month=10,year=2024),[date(day=21,month=10,year=2024)],1,2),
             (date(day=14,month=10,year=2024),date(day=14,month=10,year=2024),[date(day=21,month=10,year=2024)],7,2),
             (date(day=21,month=10,year=2024),date(day=21,month=10,year=2024),[date(day=21,month=10,year=2024)],1,1),
-            (date(day=22,month=10,year=2024),date(day=21,month=10,year=2024),[date(day=21,month=10,year=2024)],7,1),])
+            (date(day=22,month=10,year=2024),date(day=21,month=10,year=2024),[date(day=21,month=10,year=2024)],7,1)])
 def test_mark_completed(checked_date,added_date,completed_dates,frequency,length):
-    completion = Completion(frequency=frequency,completed_dates=completed_dates)
+    completion = Completion(frequency=frequency,completed_dates=completed_dates,
+                            creation_time=datetime(year=2024,month=9,day=30))
     completion.mark_completed(checked_date=checked_date)
-    assert len(completion.record["completed_dates"])==length
-    assert added_date in completion.record["completed_dates"]
+    assert len(completion["completed_dates"])==length
+    assert added_date in completion["completed_dates"]
 
 def test_mark_completed_error():
     completion = Completion()
     with pytest.raises(TypeError,match="The checked date must be of type datetime.date."):
         completion.mark_completed("No date type.")
+    with pytest.raises(ValueError,match="Checked date is out of checkable intervall."):
+        completion.mark_completed(date(year=2024,month=1,day=1))
+        completion.mark_completed(date.today()+timedelta(days=1))

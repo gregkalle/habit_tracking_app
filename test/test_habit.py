@@ -89,7 +89,8 @@ class TestHabits:
             Habit.habit_data(habit="No habit object.")
 
     def test_save_with_marked_date(self):
-        habit = Habit(name="name",description="description",frequency=1)
+        habit = Habit(name="name",description="description",
+                      frequency=1,creation_time=datetime(year=2024,month=9,day=30))
         habit.save()
         habit.completion.mark_completed(date.today())
         habit.save()

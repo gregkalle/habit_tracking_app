@@ -11,7 +11,7 @@ CLASSES
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as mb
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from tkcalendar import Calendar
 from scr.pop_up_window import PopUpWindow
 import scr.analytics as ana
@@ -291,17 +291,26 @@ class DatePicker(PopUpWindow):
             self.destroy()
             raise AttributeError("Main window has no attribute selected habit id."
                                 ) from exc
-        #save changes
-        habit.save()
-        try:
-            #reload all_habits and center frame of main window
-            self.main_window.all_habits = Habit.load_all()
-            self.main_window.reload_center_frame(self.main_window.all_habits)
-        except AttributeError as exc:
+        except ValueError:
+            #shows error message if picked date not between createn date and today.
+            message = mb.Message(self,icon=mb.ERROR,type=mb.OK,title="INPUT ERROR",
+                            message="Selected date must be between "\
+                                f"{habit["creation_time"].strftime('%d.%m.%Y')} "\
+                                f"and {datetime.now().strftime('%d.%m.%Y')}."
+                            )
+            message.show()
+        else:
+            #save changes
+            habit.save()
+            try:
+                #reload all_habits and center frame of main window
+                self.main_window.all_habits = Habit.load_all()
+                self.main_window.reload_center_frame(self.main_window.all_habits)
+            except AttributeError as exc:
+                self.destroy()
+                raise AttributeError("Main window has no attribute load habits or all habits."
+                                    ) from exc
             self.destroy()
-            raise AttributeError("Main window has no attribute load habits or all habits."
-                                ) from exc
-        self.destroy()
 
 
 class PopUpCalendar(PopUpWindow):
