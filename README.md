@@ -19,6 +19,7 @@ habits
 To check a date on which your habit was fulfilled, selected a habit and click the "check date"-button. Selcted a date and click the "selected date"-button to mark the date fulfilled. Click the "today"-button to mark today fulfilled. Click the "Cancel"-button to close the "select date"-window without marking.
 
 Make sure to only select one habit to check.
+
 Date can only be checked if between the creation date of the habit and today.
 
 ### Create New Habit
