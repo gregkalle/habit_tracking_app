@@ -18,7 +18,8 @@ habits
 ### Check Date
 To check a date on which your habit was fulfilled, selected a habit and click the "check date"-button. Selcted a date and click the "selected date"-button to mark the date fulfilled. Click the "today"-button to mark today fulfilled. Click the "Cancel"-button to close the "select date"-window without marking.
 
-Make sure to only select one habit to check. Date can only be checked if between the creation date of the habit and today.
+Make sure to only select one habit to check.
+Date can only be checked if between the creation date of the habit and today.
 
 ### Create New Habit
 To create a new task, click the "new habit"-button. Enter the habit name, the habit description and a frequency. Click the "OK"-button, to save the new habit to the database or click the "Cancel"-button to close the "new habit"-window without changes.
