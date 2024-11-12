@@ -97,7 +97,7 @@ def get_habit_with_frequency(habit_list:list, frequency:int)->list:
 
 def get_current_streak(habit)->int:
     """
-    Calculate the actuell streak count.
+    Calculate the actuell streak count between creation date and today.
 
     Returns:
         int: The number of consecutive periods the habit was fulfilled included today.
@@ -129,7 +129,7 @@ def get_current_streak(habit)->int:
     streak = 0
 
     try:
-        while today in completed_dates:
+        while today in completed_dates and today >= creation_day:
             #count today to the streak
             streak += 1
             #set today to one day before today
@@ -141,7 +141,7 @@ def get_current_streak(habit)->int:
 
 def get_longest_streak(habit)->int:
     """
-    Get the longest streak of habit.
+    Get the longest streak of habit between creation date and today.
 
     Args:
         habit(Habit): The habit from which the longest series should be calculated
